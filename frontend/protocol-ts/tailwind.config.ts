@@ -41,6 +41,33 @@ export default {
         7.5: '0.075',
         15: '0.15',
       },
+      keyframes: {
+        'bounce-gentle': {
+          '0%, 100%': { transform: 'translateY(-5%)' },
+          '50%': { transform: 'translateY(0)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'typing': {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+        'gradient-x': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+      },
+      animation: {
+        'bounce-gentle': 'bounce-gentle 3s ease-in-out infinite',
+        'fade-in': 'fade-in 0.3s ease-out',
+        'typing': 'typing 1.5s steps(20, end)',
+        'gradient-x': 'gradient-x 3s ease infinite',
+      },
+      backgroundSize: {
+        '200': '200% 200%',
+      },
     },
   },
   plugins: [typographyPlugin, headlessuiPlugin],
