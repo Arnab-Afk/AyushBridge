@@ -4,78 +4,83 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Light minimalist theme */
-  --background: #ffffff; /* Pure white background */
-  --foreground: #171717; /* Near black text */
-  --card: #ffffff; /* White cards */
-  --card-foreground: #171717; /* Dark text on cards */
-  --popover: #ffffff; /* White popover backgrounds */
-  --popover-foreground: #171717; /* Dark text in popovers */
-  --primary: #6366f1; /* Clean indigo primary */
+  /* Sofax theme - Modern SaaS/Startup theme */
+  --background: #0F0F23; /* Deep dark blue background */
+  --foreground: #ffffff; /* White text */
+  --card: #1A1A2E; /* Dark blue cards */
+  --card-foreground: #ffffff; /* White text on cards */
+  --popover: #1A1A2E; /* Dark blue popover backgrounds */
+  --popover-foreground: #ffffff; /* White text in popovers */
+  --primary: #6C5CE7; /* Purple primary - Sofax accent */
   --primary-foreground: #ffffff; /* White text on primary */
-  --secondary: #f8fafc; /* Very light gray secondary */
-  --secondary-foreground: #475569; /* Medium gray text */
-  --muted: #f1f5f9; /* Light gray muted background */
-  --muted-foreground: #64748b; /* Medium gray muted text */
-  --accent: #f1f5f9; /* Light accent background */
-  --accent-foreground: #475569; /* Medium accent text */
-  --destructive: #ef4444; /* Clean red for destructive */
+  --secondary: #2D2D3A; /* Medium dark background */
+  --secondary-foreground: #B8B8D1; /* Light purple-gray text */
+  --muted: #16213E; /* Muted dark blue background */
+  --muted-foreground: #8B8FA3; /* Muted gray text */
+  --accent: #6C5CE7; /* Purple accent background */
+  --accent-foreground: #ffffff; /* White accent text */
+  --destructive: #FF6B6B; /* Soft red for destructive */
   --destructive-foreground: #ffffff; /* White text on destructive */
-  --border: #e2e8f0; /* Light gray borders */
-  --input: #ffffff; /* White input backgrounds */
-  --ring: #6366f1; /* Indigo focus rings */
-  --chart-1: #6366f1;
-  --chart-2: #8b5cf6;
-  --chart-3: #06b6d4;
-  --chart-4: #10b981;
-  --chart-5: #f59e0b;
-  --radius: 0.5rem; /* Minimal rounded corners */
-  --sidebar: #ffffff; /* White sidebar */
-  --sidebar-foreground: #171717; /* Dark sidebar text */
-  --sidebar-primary: #6366f1; /* Indigo primary sidebar */
+  --border: #2D2D3A; /* Dark borders */
+  --input: #1A1A2E; /* Dark input backgrounds */
+  --ring: #6C5CE7; /* Purple focus rings */
+  --chart-1: #6C5CE7;
+  --chart-2: #A0A0F0;
+  --chart-3: #00D4FF;
+  --chart-4: #00C896;
+  --chart-5: #FFB946;
+  --radius: 0.75rem; /* More rounded corners for modern look */
+  --sidebar: #1A1A2E; /* Dark sidebar */
+  --sidebar-foreground: #ffffff; /* White sidebar text */
+  --sidebar-primary: #6C5CE7; /* Purple primary sidebar */
   --sidebar-primary-foreground: #ffffff; /* White text on sidebar primary */
-  --sidebar-accent: #f8fafc; /* Light gray sidebar accent */
-  --sidebar-accent-foreground: #475569; /* Medium gray text on sidebar accent */
-  --sidebar-border: #e2e8f0; /* Light gray sidebar borders */
-  --sidebar-ring: #6366f1; /* Indigo sidebar focus */
+  --sidebar-accent: #2D2D3A; /* Dark sidebar accent */
+  --sidebar-accent-foreground: #B8B8D1; /* Light text on sidebar accent */
+  --sidebar-border: #2D2D3A; /* Dark sidebar borders */
+  --sidebar-ring: #6C5CE7; /* Purple sidebar focus */
   --font-instrument-serif: "Instrument Serif", serif;
   --font-figtree: "Figtree", sans-serif;
+  
+  /* Sofax-specific gradients */
+  --gradient-primary: linear-gradient(135deg, #6C5CE7 0%, #A0A0F0 100%);
+  --gradient-background: linear-gradient(135deg, #0F0F23 0%, #1A1A2E 50%, #16213E 100%);
+  --gradient-card: linear-gradient(135deg, #1A1A2E 0%, #2D2D3A 100%);
 }
 
 .dark {
-  /* Same light theme values for consistency */
-  --background: #ffffff;
-  --foreground: #171717;
-  --card: #ffffff;
-  --card-foreground: #171717;
-  --popover: #ffffff;
-  --popover-foreground: #171717;
-  --primary: #6366f1;
+  /* Sofax theme - Same dark theme for consistency */
+  --background: #0F0F23;
+  --foreground: #ffffff;
+  --card: #1A1A2E;
+  --card-foreground: #ffffff;
+  --popover: #1A1A2E;
+  --popover-foreground: #ffffff;
+  --primary: #6C5CE7;
   --primary-foreground: #ffffff;
-  --secondary: #f8fafc;
-  --secondary-foreground: #475569;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #f1f5f9;
-  --accent-foreground: #475569;
-  --destructive: #ef4444;
+  --secondary: #2D2D3A;
+  --secondary-foreground: #B8B8D1;
+  --muted: #16213E;
+  --muted-foreground: #8B8FA3;
+  --accent: #6C5CE7;
+  --accent-foreground: #ffffff;
+  --destructive: #FF6B6B;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #ffffff;
-  --ring: #6366f1;
-  --chart-1: #6366f1;
-  --chart-2: #8b5cf6;
-  --chart-3: #06b6d4;
-  --chart-4: #10b981;
-  --chart-5: #f59e0b;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #171717;
-  --sidebar-primary: #6366f1;
+  --border: #2D2D3A;
+  --input: #1A1A2E;
+  --ring: #6C5CE7;
+  --chart-1: #6C5CE7;
+  --chart-2: #A0A0F0;
+  --chart-3: #00D4FF;
+  --chart-4: #00C896;
+  --chart-5: #FFB946;
+  --sidebar: #1A1A2E;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #6C5CE7;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f8fafc;
-  --sidebar-accent-foreground: #475569;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #6366f1;
+  --sidebar-accent: #2D2D3A;
+  --sidebar-accent-foreground: #B8B8D1;
+  --sidebar-border: #2D2D3A;
+  --sidebar-ring: #6C5CE7;
   --font-instrument-serif: "Instrument Serif", serif;
   --font-figtree: "Figtree", sans-serif;
 }
@@ -131,9 +136,64 @@
     @apply bg-background text-foreground;
     /* Set Figtree as the default font family for the entire website */
     font-family: var(--font-figtree);
+    background: var(--gradient-background);
+    min-height: 100vh;
   }
 }
 
 .instrument {
   font-family: var(--font-instrument-serif);
+}
+
+/* Sofax theme specific styles */
+.sofax-gradient {
+  background: var(--gradient-primary);
+}
+
+.sofax-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+
+.sofax-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sofax-button-primary {
+  background: var(--gradient-primary);
+  transition: all 0.3s ease;
+}
+
+.sofax-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+}
+
+.sofax-text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animation classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
