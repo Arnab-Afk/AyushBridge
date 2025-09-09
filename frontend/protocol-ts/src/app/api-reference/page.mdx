@@ -1,0 +1,594 @@
+export const metadata = {
+  title: 'API Reference',
+  description:
+    'Complete API reference for AyushBridge FHIR R4 terminology services, including authentication, endpoints, and response formats.',
+}
+
+export const sections = [
+  { title: 'Authentication', id: 'authentication' },
+  { title: 'Base URL & Headers', id: 'base-url-headers' },
+  { title: 'Terminology Lookup', id: 'terminology-lookup' },
+  { title: 'Search & Autocomplete', id: 'search-autocomplete' },
+  { title: 'Code Translation', id: 'code-translation' },
+  { title: 'FHIR Bundle Upload', id: 'fhir-bundle-upload' },
+  { title: 'Batch Operations', id: 'batch-operations' },
+  { title: 'Error Handling', id: 'error-handling' },
+]
+
+# API Reference
+
+Complete reference for the AyushBridge FHIR R4-compliant terminology API. All endpoints follow FHIR specifications and support standard HTTP methods and status codes. {{ className: 'lead' }}
+
+## Authentication {{ id: 'authentication' }}
+
+All API requests require OAuth 2.0 Bearer token authentication via ABHA (Ayushman Bharat Health Account):
+
+```bash {{ title: 'Authorization Header' }}
+Authorization: Bearer <ABHA_TOKEN>
+```
+
+<CodeGroup>
+
+```bash {{ title: 'Get ABHA Token' }}
+curl -X POST "https://abha.abdm.gov.in/auth/oauth2/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "scope=openid profile abha-enrol"
+```
+
+```javascript {{ title: 'JavaScript Token Request' }}
+const getToken = async () => {
+  const response = await fetch('https://abha.abdm.gov.in/auth/oauth2/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: process.env.ABHA_CLIENT_ID,
+      client_secret: process.env.ABHA_CLIENT_SECRET,
+      scope: 'openid profile abha-enrol'
+    })
+  });
+  const { access_token } = await response.json();
+  return access_token;
+};
+```
+
+</CodeGroup>
+
+## Base URL & Headers {{ id: 'base-url-headers' }}
+
+- **Production**: `https://api.ayushbridge.in`
+- **Development**: `http://localhost:3000`
+
+### Required Headers
+```http
+Authorization: Bearer <ABHA_TOKEN>
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+```
+
+### Optional Headers
+```http
+Accept-Language: en, hi
+X-Request-ID: unique-request-identifier
+```
+
+---
+
+## Terminology Lookup {{ id: 'terminology-lookup' }}
+
+Lookup specific terminology codes with detailed information.
+
+### NAMASTE Code Lookup
+
+<CodeGroup tag="GET" label="/fhir/CodeSystem/namaste/$lookup">
+
+```bash {{ title: 'cURL' }}
+curl -X GET "https://api.ayushbridge.in/fhir/CodeSystem/namaste/\$lookup?code=NAM001" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Accept: application/fhir+json"
+```
+
+```javascript {{ title: 'JavaScript' }}
+const lookupCode = async (code, token) => {
+  const response = await fetch(
+    `https://api.ayushbridge.in/fhir/CodeSystem/namaste/$lookup?code=${code}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/fhir+json'
+      }
+    }
+  );
+  return await response.json();
+};
+```
+
+```python {{ title: 'Python' }}
+def lookup_namaste_code(code, token):
+    response = requests.get(
+        f'https://api.ayushbridge.in/fhir/CodeSystem/namaste/$lookup',
+        params={'code': code},
+        headers={
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/fhir+json'
+        }
+    )
+    return response.json()
+```
+
+</CodeGroup>
+
+#### Parameters
+- `code` (required): NAMASTE code to look up
+- `system` (optional): Code system URI
+- `version` (optional): Version of the code system
+- `displayLanguage` (optional): Language for display text ('en', 'hi')
+
+#### Response
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "name",
+      "valueString": "NAMASTE Code System"
+    },
+    {
+      "name": "display",
+      "valueString": "Amavata (Rheumatoid Arthritis)"
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "hi"
+        },
+        {
+          "name": "value",
+          "valueString": "आमवात"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "traditional-system"
+        },
+        {
+          "name": "value",
+          "valueString": "ayurveda"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## Search & Autocomplete {{ id: 'search-autocomplete' }}
+
+Search and auto-complete functionality for terminology discovery.
+
+### NAMASTE Term Search
+
+<CodeGroup tag="GET" label="/fhir/ValueSet/namaste/$expand">
+
+```bash {{ title: 'cURL' }}
+curl -X GET "https://api.ayushbridge.in/fhir/ValueSet/namaste/\$expand?filter=amavata&count=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript {{ title: 'JavaScript' }}
+const searchTerms = async (query, count = 10, token) => {
+  const response = await fetch(
+    `https://api.ayushbridge.in/fhir/ValueSet/namaste/$expand?filter=${query}&count=${count}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/fhir+json'
+      }
+    }
+  );
+  const data = await response.json();
+  return data.expansion.contains;
+};
+```
+
+```python {{ title: 'Python' }}
+def search_terms(query, count=10, token=None):
+    response = requests.get(
+        'https://api.ayushbridge.in/fhir/ValueSet/namaste/$expand',
+        params={'filter': query, 'count': count},
+        headers={
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/fhir+json'
+        }
+    )
+    data = response.json()
+    return data.get('expansion', {}).get('contains', [])
+```
+
+</CodeGroup>
+
+#### Parameters
+- `filter` (required): Search term for auto-complete
+- `count` (optional): Maximum results (default: 20, max: 100)
+- `system` (optional): Filter by traditional medicine system
+- `includeDefinition` (optional): Include concept definitions
+
+#### Response
+```json
+{
+  "resourceType": "ValueSet",
+  "expansion": {
+    "timestamp": "2025-09-09T10:30:00Z",
+    "total": 3,
+    "contains": [
+      {
+        "system": "https://ayush.gov.in/fhir/CodeSystem/namaste",
+        "code": "NAM001",
+        "display": "Amavata (Rheumatoid Arthritis)",
+        "designation": [
+          {
+            "language": "hi",
+            "value": "आमवात"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Code Translation {{ id: 'code-translation' }}
+
+Translate codes between different terminology systems.
+
+### NAMASTE to ICD-11 Translation
+
+<CodeGroup tag="POST" label="/fhir/ConceptMap/namaste-to-icd11/$translate">
+
+```bash {{ title: 'cURL' }}
+curl -X POST "https://api.ayushbridge.in/fhir/ConceptMap/namaste-to-icd11/\$translate" \
+  -H "Content-Type: application/fhir+json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "resourceType": "Parameters",
+    "parameter": [
+      {"name": "code", "valueCode": "NAM001"},
+      {"name": "system", "valueUri": "https://ayush.gov.in/fhir/CodeSystem/namaste"},
+      {"name": "target", "valueUri": "http://id.who.int/icd/release/11/mms"}
+    ]
+  }'
+```
+
+```javascript {{ title: 'JavaScript' }}
+const translateCode = async (code, sourceSystem, targetSystem, token) => {
+  const response = await fetch(
+    'https://api.ayushbridge.in/fhir/ConceptMap/namaste-to-icd11/$translate',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/fhir+json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        resourceType: 'Parameters',
+        parameter: [
+          { name: 'code', valueCode: code },
+          { name: 'system', valueUri: sourceSystem },
+          { name: 'target', valueUri: targetSystem }
+        ]
+      })
+    }
+  );
+  return await response.json();
+};
+```
+
+```python {{ title: 'Python' }}
+def translate_code(code, source_system, target_system, token):
+    payload = {
+        "resourceType": "Parameters",
+        "parameter": [
+            {"name": "code", "valueCode": code},
+            {"name": "system", "valueUri": source_system},
+            {"name": "target", "valueUri": target_system}
+        ]
+    }
+    
+    response = requests.post(
+        'https://api.ayushbridge.in/fhir/ConceptMap/namaste-to-icd11/$translate',
+        headers={
+            'Content-Type': 'application/fhir+json',
+            'Authorization': f'Bearer {token}'
+        },
+        json=payload
+    )
+    return response.json()
+```
+
+</CodeGroup>
+
+#### Parameters
+- `code` (required): Source code to translate
+- `system` (required): Source code system URI
+- `target` (required): Target system URI
+- `reverse` (optional): Perform reverse translation
+
+#### Supported Translation Paths
+- NAMASTE → ICD-11 TM2
+- NAMASTE → ICD-11 Biomedicine
+- ICD-11 TM2 ↔ ICD-11 Biomedicine
+- WHO Ayurveda → NAMASTE
+
+#### Response
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "match",
+      "part": [
+        {
+          "name": "equivalence",
+          "valueCode": "equivalent"
+        },
+        {
+          "name": "concept",
+          "valueCoding": {
+            "system": "http://id.who.int/icd/release/11/mms",
+            "code": "TM26.0",
+            "display": "Disorders of vata dosha"
+          }
+        },
+        {
+          "name": "confidence",
+          "valueDecimal": 0.95
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## FHIR Bundle Upload {{ id: 'fhir-bundle-upload' }}
+
+Upload FHIR Bundles with dual-coded conditions and observations.
+
+### Create Dual-Coded Condition
+
+<CodeGroup tag="POST" label="/fhir/Bundle">
+
+```bash {{ title: 'cURL' }}
+curl -X POST "https://api.ayushbridge.in/fhir/Bundle" \
+  -H "Content-Type: application/fhir+json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d @dual-coded-condition.json
+```
+
+```javascript {{ title: 'JavaScript' }}
+const createDualCodedCondition = async (patientId, namasteCode, icd11Code, token) => {
+  const bundle = {
+    resourceType: 'Bundle',
+    type: 'transaction',
+    entry: [{
+      resource: {
+        resourceType: 'Condition',
+        subject: { reference: `Patient/${patientId}` },
+        code: {
+          coding: [
+            {
+              system: 'https://ayush.gov.in/fhir/CodeSystem/namaste',
+              code: namasteCode.code,
+              display: namasteCode.display
+            },
+            {
+              system: 'http://id.who.int/icd/release/11/mms',
+              code: icd11Code.code,
+              display: icd11Code.display
+            }
+          ]
+        },
+        clinicalStatus: {
+          coding: [{
+            system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
+            code: 'active'
+          }]
+        }
+      },
+      request: { method: 'POST', url: 'Condition' }
+    }]
+  };
+
+  const response = await fetch('https://api.ayushbridge.in/fhir/Bundle', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/fhir+json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(bundle)
+  });
+  
+  return await response.json();
+};
+```
+
+</CodeGroup>
+
+#### Example Bundle
+```json
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "subject": {
+          "reference": "Patient/example-patient"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "https://ayush.gov.in/fhir/CodeSystem/namaste",
+              "code": "NAM001",
+              "display": "Amavata"
+            },
+            {
+              "system": "http://id.who.int/icd/release/11/mms",
+              "code": "TM26.0",
+              "display": "Disorders of vata dosha"
+            },
+            {
+              "system": "http://id.who.int/icd/release/11/mms",
+              "code": "FA20.00",
+              "display": "Rheumatoid arthritis, unspecified"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+                "code": "problem-list-item"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Batch Operations {{ id: 'batch-operations' }}
+
+Perform batch operations for multiple codes simultaneously.
+
+### Batch Translation
+
+<CodeGroup tag="POST" label="/fhir/ConceptMap/$batch-translate">
+
+```bash {{ title: 'cURL' }}
+curl -X POST "https://api.ayushbridge.in/fhir/ConceptMap/\$batch-translate" \
+  -H "Content-Type: application/fhir+json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "resourceType": "Parameters",
+    "parameter": [
+      {
+        "name": "codes",
+        "part": [
+          {"name": "code", "valueCode": "NAM001"},
+          {"name": "code", "valueCode": "NAM002"}
+        ]
+      },
+      {"name": "source", "valueUri": "https://ayush.gov.in/fhir/CodeSystem/namaste"},
+      {"name": "target", "valueUri": "http://id.who.int/icd/release/11/mms"}
+    ]
+  }'
+```
+
+```javascript {{ title: 'JavaScript' }}
+const batchTranslate = async (codes, sourceSystem, targetSystem, token) => {
+  const response = await fetch(
+    'https://api.ayushbridge.in/fhir/ConceptMap/$batch-translate',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/fhir+json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        resourceType: 'Parameters',
+        parameter: [
+          {
+            name: 'codes',
+            part: codes.map(code => ({ name: 'code', valueCode: code }))
+          },
+          { name: 'source', valueUri: sourceSystem },
+          { name: 'target', valueUri: targetSystem }
+        ]
+      })
+    }
+  );
+  return await response.json();
+};
+```
+
+</CodeGroup>
+
+---
+
+## Error Handling {{ id: 'error-handling' }}
+
+AyushBridge uses standard HTTP status codes and FHIR OperationOutcome resources for error reporting.
+
+### Error Response Format
+```json
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "not-found",
+      "details": {
+        "text": "Code NAM999 not found in NAMASTE CodeSystem"
+      },
+      "diagnostics": "Verify the code exists in the current version"
+    }
+  ]
+}
+```
+
+### Common Error Codes
+| Status | Code | Description |
+|--------|------|-------------|
+| 400 | `invalid` | Invalid request parameters |
+| 401 | `login` | Authentication required |
+| 403 | `forbidden` | Insufficient permissions |
+| 404 | `not-found` | Resource not found |
+| 429 | `throttled` | Rate limit exceeded |
+| 500 | `exception` | Internal server error |
+
+### Rate Limiting
+- **Default Limit**: 1000 requests per hour per client
+- **Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
+- **Burst Allowance**: 100 requests per minute
+
+<div className="not-prose">
+  <Button href="/authentication" variant="text" arrow="right">
+    <>Learn more about authentication setup</>
+  </Button>
+</div>

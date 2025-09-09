@@ -1,0 +1,142 @@
+export const metadata = {
+  title: 'Authentication',
+  description:
+    'Learn how to authenticate with AyushBridge using ABHA OAuth 2.0. This guide covers token acquisition, security best practices, and integration with India health ID system.',
+}
+
+# Authentication
+
+AyushBridge uses ABHA (Ayushman Bharat Health Account) OAuth 2.0 for secure authentication, ensuring compliance with India's digital health standards and enabling seamless integration with the national health ecosystem. {{ className: 'lead' }}
+
+## ABHA OAuth 2.0 Authentication
+
+AyushBridge integrates with India's national health ID system through ABHA OAuth 2.0, providing secure, standardized authentication for healthcare applications.
+
+### Prerequisites
+
+Before you can authenticate with AyushBridge, you need:
+- **ABHA Developer Account**: Register at [ABHA Developer Portal](https://abha.abdm.gov.in/developers)
+- **Client Credentials**: Obtain your Client ID and Client Secret
+- **Redirect URI**: Configure your application's callback URL
+- **Scopes**: Request appropriate permissions for your use case
+
+## Client Credentials Flow
+
+For server-to-server authentication, use the client credentials grant type:
+
+<CodeGroup>
+
+```bash {{ title: 'cURL Token Request' }}
+curl -X POST "https://abha.abdm.gov.in/auth/oauth2/token" 
+  -H "Content-Type: application/x-www-form-urlencoded" 
+  -d "grant_type=client_credentials" 
+  -d "client_id=YOUR_CLIENT_ID" 
+  -d "client_secret=YOUR_CLIENT_SECRET" 
+  -d "scope=openid profile abha-enrol"
+```
+
+```javascript {{ title: 'JavaScript Token Request' }}
+async function getABHAToken() {
+  const response = await fetch('https://abha.abdm.gov.in/auth/oauth2/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: process.env.ABHA_CLIENT_ID,
+      client_secret: process.env.ABHA_CLIENT_SECRET,
+      scope: 'openid profile abha-enrol'
+    })
+  });
+
+  const data = await response.json();
+  return data.access_token;
+}
+```
+
+```python {{ title: 'Python Token Request' }}
+import requests
+import os
+
+def get_abha_token():
+    response = requests.post(
+        'https://abha.abdm.gov.in/auth/oauth2/token',
+        data={
+            'grant_type': 'client_credentials',
+            'client_id': os.environ['ABHA_CLIENT_ID'],
+            'client_secret': os.environ['ABHA_CLIENT_SECRET'],
+            'scope': 'openid profile abha-enrol'
+        }
+    )
+    return response.json()['access_token']
+```
+
+</CodeGroup>
+
+## Making Authenticated Requests
+
+Include the access token in the Authorization header for all API requests:
+
+```bash {{ title: 'Example request with bearer token' }}
+curl -X GET "https://api.ayushbridge.in/fhir/ValueSet/namaste/\$expand?filter=amavata" 
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" 
+  -H "Accept: application/fhir+json"
+```
+
+Always keep your token safe and implement proper token refresh mechanisms for production applications.
+
+## Authorization Scopes
+
+AyushBridge supports different OAuth scopes for granular access control:
+
+| Scope | Description |
+|-------|-------------|
+| `openid` | Basic OpenID Connect |
+| `profile` | User profile information |
+| `abha-enrol` | ABHA enrollment data |
+| `terminology-read` | Read terminology data |
+| `terminology-write` | Write terminology data |
+| `translation` | Code translation services |
+
+<div className="not-prose">
+  <Button href="/api-reference" variant="text" arrow="right">
+    <>Start using the authenticated API</>
+  </Button>
+</div>
+
+# Authentication
+
+You'll need to authenticate your requests to access any of the endpoints in the Protocol API. In this guide, we'll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token — OAuth2 is the recommended way. {{ className: 'lead' }}
+
+## Basic authentication
+
+With basic authentication, you use your username and password to authenticate your HTTP requests. Unless you have a very good reason, you probably shouldn't use basic auth. Here's how to authenticate using cURL:
+
+```bash {{ title: 'Example request with basic auth' }}
+curl https://api.protocol.chat/v1/conversations \
+  -u username:password
+```
+
+Please don't commit your Protocol password to GitHub!
+
+## OAuth2 with bearer token
+
+The recommended way to authenticate with the Protocol API is by using OAuth2. When establishing a connection using OAuth2, you will need your access token — you will find it in the [Protocol dashboard](#) under API settings. Here's how to add the token to the request header using cURL:
+
+```bash {{ title: 'Example request with bearer token' }}
+curl https://api.protocol.chat/v1/conversations \
+  -H "Authorization: Bearer {token}"
+```
+
+Always keep your token safe and reset it if you suspect it has been compromised.
+
+## Using an SDK
+
+If you use one of our official SDKs, you won't have to worry about any of the above — fetch your access token from the [Protocol dashboard](#) under API settings, and the client library will take care of the rest. All the client libraries use OAuth2 behind the scenes.
+
+<div className="not-prose">
+  <Button href="/sdks" variant="text" arrow="right">
+    <>Check out our list of first-party SDKs</>
+  </Button>
+</div>
