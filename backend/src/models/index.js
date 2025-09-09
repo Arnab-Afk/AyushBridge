@@ -9,13 +9,13 @@ const setupAssociations = () => {
   ConceptMapping.belongsTo(NAMASTECode, {
     foreignKey: 'source_code',
     targetKey: 'code',
-    as: 'sourceCodeEntity'
+    as: 'sourceEntity'
   });
 
   ConceptMapping.belongsTo(ICD11Code, {
     foreignKey: 'target_code',
     targetKey: 'code',
-    as: 'targetCodeEntity'
+    as: 'targetEntity'
   });
 
   // NAMASTECode associations

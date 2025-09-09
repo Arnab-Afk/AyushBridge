@@ -1,3 +1,6 @@
+// Load environment variables FIRST
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -7,12 +10,9 @@ const rateLimit = require('express-rate-limit');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const logger = require('./utils/logger');
-const errorHandler = require('./middleware/errorHandler');
+const { errorHandler } = require('./middleware/errorHandler');
 const { connectDB } = require('./config/database');
 const { connectRedis } = require('./config/redis');
-
-// Load environment variables
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -152,9 +152,8 @@ async function startServer() {
     await connectDB();
     logger.info('PostgreSQL database connected successfully');
     
-    // Connect to Redis
+    // Connect to Redis (if available)
     await connectRedis();
-    logger.info('Redis connected successfully');
     
     // Start the server
     const server = app.listen(PORT, () => {

@@ -1,9 +1,5 @@
 require('dotenv').config();
-
-console.log('🔧 Loading environment variables...');
-console.log('DB_HOST:', process.env.DB_HOST);
-console.log('DB_USER:', process.env.DB_USER);
-
+const logger = require('../src/utils/logger');
 const { sequelize } = require('../src/models');
 const { NAMASTECode, ICD11Code, ConceptMapping } = require('../src/models');
 
@@ -16,76 +12,89 @@ const { NAMASTECode, ICD11Code, ConceptMapping } = require('../src/models');
 
 async function setupDatabase() {
   try {
-    console.log('🚀 Starting Database Setup');
-    console.log('='.repeat(50));
+    logger.info('🚀 Starting Database Setup');
+    logger.info('='.repeat(50));
 
     // Test database connection
-    console.log('📡 Testing database connection...');
+    logger.info('📡 Testing database connection...');
     await sequelize.authenticate();
-    console.log('✅ Database connection successful');
+    logger.info('✅ Database connection successful');
 
     // Show current database info
     const dbConfig = sequelize.config;
-    console.log(`📊 Database: ${dbConfig.database}`);
-    console.log(`🏠 Host: ${dbConfig.host}:${dbConfig.port}`);
-    console.log(`👤 User: ${dbConfig.username}`);
+    logger.info(`📊 Database: ${dbConfig.database}`);
+    logger.info(`🏠 Host: ${dbConfig.host}:${dbConfig.port}`);
+    logger.info(`👤 User: ${dbConfig.username}`);
 
-    // Create/update tables
-    console.log('\n🔧 Creating/updating database tables...');
-    await sequelize.sync({ alter: true });
-    console.log('✅ All tables created/updated successfully');
+    // Check for force flag
+    const forceSync = process.argv.includes('--force');
+    
+    if (forceSync) {
+      logger.warn('⚠️ FORCE FLAG DETECTED. This will drop all existing tables!');
+      logger.warn('⏱️ You have 5 seconds to cancel (Ctrl+C)...');
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      logger.warn('💣 Dropping and recreating all tables...');
+      await sequelize.sync({ force: true });
+      logger.info('✅ All tables were dropped and recreated.');
+    } else {
+      // Create/update tables
+      logger.info('\n🔧 Creating/updating database tables...');
+      await sequelize.sync({ alter: true });
+      logger.info('✅ All tables created/updated successfully');
+    }
 
     // Check existing data
-    console.log('\n📊 Checking existing data...');
+    logger.info('\n📊 Checking existing data...');
     
     const namasteCount = await NAMASTECode.count();
     const icd11Count = await ICD11Code.count();
     const mappingCount = await ConceptMapping.count();
 
-    console.log(`📋 NAMASTE Codes: ${namasteCount}`);
-    console.log(`📋 ICD-11 Codes: ${icd11Count}`);
-    console.log(`📋 Concept Mappings: ${mappingCount}`);
+    logger.info(`📋 NAMASTE Codes: ${namasteCount}`);
+    logger.info(`📋 ICD-11 Codes: ${icd11Count}`);
+    logger.info(`📋 Concept Mappings: ${mappingCount}`);
 
     // Test basic model functionality
-    console.log('\n🧪 Testing model functionality...');
+    logger.info('\n🧪 Testing model functionality...');
     
     // Test creating a sample NAMASTE code
     const testCode = await NAMASTECode.findOrCreate({
       where: { code: 'TEST_001' },
       defaults: {
-        english_name: 'Test Ayurvedic Concept',
+        display: 'Test Ayurvedic Concept',
         traditional_system: 'ayurveda',
-        description: 'This is a test entry for database validation',
-        source: 'database_setup',
-        status: 'active'
+        definition: 'This is a test entry for database validation',
+        status: 'active',
+        properties: { source: 'database_setup' }
       }
     });
 
     if (testCode[1]) {
-      console.log('✅ Created test NAMASTE code');
+      logger.info('✅ Created test NAMASTE code');
       // Clean up test data
       await NAMASTECode.destroy({ where: { code: 'TEST_001' } });
-      console.log('🧹 Cleaned up test data');
+      logger.info('🧹 Cleaned up test data');
     } else {
-      console.log('ℹ️  Test code already exists (database working)');
+      logger.info('ℹ️  Test code already exists (database working)');
     }
 
-    console.log('\n🎉 Database setup completed successfully!');
-    console.log('\n📝 Next Steps:');
-    console.log('1. Prepare your Excel file with NAMASTE codes');
-    console.log('2. Run: node scripts/import-namaste.js <your-excel-file>');
-    console.log('3. Start the server: npm run dev');
+    logger.info('\n🎉 Database setup completed successfully!');
+    logger.info('\n📝 Next Steps:');
+    logger.info('1. Prepare your CSV file with NAMASTE codes');
+    logger.info('2. Run: npm run import:csv -- path/to/your/file.csv');
+    logger.info('3. Start the server: npm run dev');
 
   } catch (error) {
-    console.error('💥 Database setup failed:', error.message);
-    console.error('\n🔍 Troubleshooting:');
-    console.error('1. Check your .env file has correct database credentials');
-    console.error('2. Ensure your Neon database is accessible');
-    console.error('3. Verify network connectivity');
+    logger.error('💥 Database setup failed:', error);
+    logger.error('\n🔍 Troubleshooting:');
+    logger.error('1. Check your .env file has correct database credentials');
+    logger.error('2. Ensure your database is accessible');
+    logger.error('3. Verify network connectivity');
     throw error;
   } finally {
     await sequelize.close();
-    console.log('🔌 Database connection closed');
+    logger.info('🔌 Database connection closed');
   }
 }
 
@@ -93,11 +102,11 @@ async function setupDatabase() {
 if (require.main === module) {
   setupDatabase()
     .then(() => {
-      console.log('✨ Setup complete!');
+      logger.info('✨ Setup complete!');
       process.exit(0);
     })
     .catch((error) => {
-      console.error('Setup failed:', error.message);
+      logger.error('Setup failed:', error);
       process.exit(1);
     });
 }

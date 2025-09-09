@@ -195,13 +195,13 @@ const ConceptMapping = sequelize.define('concept_mappings', {
 ConceptMapping.belongsTo(require('./NamasteCode'), {
   foreignKey: 'source_code',
   targetKey: 'code',
-  as: 'sourceCodeEntity'
+  as: 'sourceEntity'
 });
 
 ConceptMapping.belongsTo(require('./ICD11Code'), {
   foreignKey: 'target_code',
   targetKey: 'code',
-  as: 'targetCodeEntity'
+  as: 'targetEntity'
 });
 
 // Instance methods
@@ -260,12 +260,12 @@ ConceptMapping.translateCode = async function(sourceCode, sourceSystem = null, t
     include: [
       {
         model: require('./NamasteCode'),
-        as: 'sourceCodeEntity',
+        as: 'sourceEntity',
         required: false
       },
       {
         model: require('./ICD11Code'),
-        as: 'targetCodeEntity',
+        as: 'targetEntity',
         required: false
       }
     ],
@@ -292,12 +292,12 @@ ConceptMapping.reverseTranslateCode = async function(targetCode, targetSystem = 
     include: [
       {
         model: require('./NamasteCode'),
-        as: 'sourceCodeEntity',
+        as: 'sourceEntity',
         required: false
       },
       {
         model: require('./ICD11Code'),
-        as: 'targetCodeEntity',
+        as: 'targetEntity',
         required: false
       }
     ],
@@ -326,12 +326,12 @@ ConceptMapping.batchTranslate = async function(sourceCodes, sourceSystem = null,
     include: [
       {
         model: require('./NamasteCode'),
-        as: 'sourceCodeEntity',
+        as: 'sourceEntity',
         required: false
       },
       {
         model: require('./ICD11Code'),
-        as: 'targetCodeEntity',
+        as: 'targetEntity',
         required: false
       }
     ],
