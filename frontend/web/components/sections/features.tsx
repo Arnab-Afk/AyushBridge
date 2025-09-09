@@ -44,44 +44,41 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-6 leading-tight">
+          <h2 className="text-4xl font-bold mb-6 text-gray-900">
             Explore Our
             <br />
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-indigo-600">
               Latest Features
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
             From FHIR-compliant terminology management to AI-powered code translation, our platform helps healthcare organizations scale smarter. 
             Explore the comprehensive features we've built for traditional medicine digitization.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <Card key={index} className="group overflow-hidden border-0 bg-white dark:bg-gray-900 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-              {/* Image/Gradient Header */}
-              <div className={`h-48 bg-gradient-to-br ${feature.gradient} relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/20"></div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
-                    Feature
-                  </Badge>
+            <Card key={index} className="group border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 rounded-lg">
+              {/* Minimal Header */}
+              <div className="h-32 bg-gray-50 relative overflow-hidden flex items-center justify-center">
+                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <div className="w-6 h-6 bg-indigo-600 rounded"></div>
                 </div>
               </div>
               
               {/* Content */}
               <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">
+                <h3 className="text-lg font-semibold mb-3 text-gray-900">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
+                <p className="text-gray-600 text-sm leading-relaxed mb-4">
                   {feature.description}
                 </p>
-                <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-2 group">
+                <button className="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors flex items-center gap-2 group">
                   View Details
                   <span className="transform transition-transform group-hover:translate-x-1">→</span>
                 </button>

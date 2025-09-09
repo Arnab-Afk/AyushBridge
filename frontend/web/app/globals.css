@@ -4,82 +4,80 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color tokens to match dramatic lighting design brief */
-  --background: #000000; /* Pure black background */
-  --foreground: oklch(1 0 0); /* Pure white for text and highlights */
-  --card: oklch(0.95 0 0); /* Light gray for subtle backgrounds */
-  --card-foreground: oklch(0 0 0); /* Black text on light cards */
-  --popover: oklch(1 0 0); /* White for popover backgrounds */
-  --popover-foreground: oklch(0 0 0); /* Black text in popovers */
-  --primary: oklch(0.65 0.2 270); /* Violet accent for highlights */
-  --primary-foreground: oklch(1 0 0); /* White text on violet */
-  --secondary: oklch(0.95 0 0); /* Light gray for secondary elements */
-  --secondary-foreground: oklch(0 0 0); /* Black text on secondary */
-  --muted: oklch(0.25 0 0); /* Dark gray for muted elements */
-  --muted-foreground: oklch(0.95 0 0); /* Light gray text for muted */
-  --accent: oklch(0.65 0.2 270); /* Violet for interactive elements */
-  --accent-foreground: oklch(1 0 0); /* White text on accent */
-  --destructive: oklch(0.6 0.2 40); /* Amber for destructive actions */
-  --destructive-foreground: oklch(1 0 0); /* White text for destructive */
-  --border: oklch(1 0 0); /* White borders for contrast */
-  --input: oklch(0.95 0 0); /* Light gray for inputs */
-  --ring: oklch(0.65 0.2 270); /* Violet for focus rings */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.5rem; /* Softer rounded corners */
-  --sidebar: oklch(0 0 0); /* Black sidebar */
-  --sidebar-foreground: oklch(1 0 0); /* White sidebar text */
-  --sidebar-primary: oklch(0.65 0 0); /* Violet for primary sidebar */
-  --sidebar-primary-foreground: oklch(1 0 0); /* White text on sidebar primary */
-  --sidebar-accent: oklch(0.95 0 0); /* Light gray for sidebar accent */
-  --sidebar-accent-foreground: oklch(0 0 0); /* Black text on sidebar accent */
-  --sidebar-border: oklch(1 0 0); /* White sidebar borders */
-  --sidebar-ring: oklch(0.65 0.2 270); /* Violet for sidebar focus */
-  --font-instrument-serif: "Instrument Serif", serif; /* Instrument Serif font family configuration */
-  /* Added Figtree as the primary font variable */
-  --font-figtree: "Figtree", sans-serif; /* Figtree font family configuration */
+  /* Light minimalist theme */
+  --background: #ffffff; /* Pure white background */
+  --foreground: #171717; /* Near black text */
+  --card: #ffffff; /* White cards */
+  --card-foreground: #171717; /* Dark text on cards */
+  --popover: #ffffff; /* White popover backgrounds */
+  --popover-foreground: #171717; /* Dark text in popovers */
+  --primary: #6366f1; /* Clean indigo primary */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #f8fafc; /* Very light gray secondary */
+  --secondary-foreground: #475569; /* Medium gray text */
+  --muted: #f1f5f9; /* Light gray muted background */
+  --muted-foreground: #64748b; /* Medium gray muted text */
+  --accent: #f1f5f9; /* Light accent background */
+  --accent-foreground: #475569; /* Medium accent text */
+  --destructive: #ef4444; /* Clean red for destructive */
+  --destructive-foreground: #ffffff; /* White text on destructive */
+  --border: #e2e8f0; /* Light gray borders */
+  --input: #ffffff; /* White input backgrounds */
+  --ring: #6366f1; /* Indigo focus rings */
+  --chart-1: #6366f1;
+  --chart-2: #8b5cf6;
+  --chart-3: #06b6d4;
+  --chart-4: #10b981;
+  --chart-5: #f59e0b;
+  --radius: 0.5rem; /* Minimal rounded corners */
+  --sidebar: #ffffff; /* White sidebar */
+  --sidebar-foreground: #171717; /* Dark sidebar text */
+  --sidebar-primary: #6366f1; /* Indigo primary sidebar */
+  --sidebar-primary-foreground: #ffffff; /* White text on sidebar primary */
+  --sidebar-accent: #f8fafc; /* Light gray sidebar accent */
+  --sidebar-accent-foreground: #475569; /* Medium gray text on sidebar accent */
+  --sidebar-border: #e2e8f0; /* Light gray sidebar borders */
+  --sidebar-ring: #6366f1; /* Indigo sidebar focus */
+  --font-instrument-serif: "Instrument Serif", serif;
+  --font-figtree: "Figtree", sans-serif;
 }
 
 .dark {
-  /* Dark mode maintains the same dramatic black background theme */
-  --background: #000000;
-  --foreground: oklch(1 0 0);
-  --card: oklch(0.1 0 0);
-  --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.1 0 0);
-  --popover-foreground: oklch(1 0 0);
-  --primary: oklch(0.7 0.25 270);
-  --primary-foreground: oklch(0 0 0);
-  --secondary: oklch(0.15 0 0);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.7 0.25 270);
-  --accent-foreground: oklch(0 0 0);
-  --destructive: oklch(0.5 0.2 40);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.3 0 0);
-  --input: oklch(0.15 0 0);
-  --ring: oklch(0.7 0.25 270);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.7 0.25 270);
-  --sidebar-primary-foreground: oklch(0 0 0);
-  --sidebar-accent: oklch(0.15 0 0);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.3 0 0);
-  --sidebar-ring: oklch(0.7 0.25 270);
-  --font-instrument-serif: "Instrument Serif", serif; /* Instrument Serif font family configuration */
-  /* Added Figtree font variable for dark mode consistency */
-  --font-figtree: "Figtree", sans-serif; /* Figtree font family configuration */
+  /* Same light theme values for consistency */
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #f8fafc;
+  --secondary-foreground: #475569;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #475569;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #ffffff;
+  --ring: #6366f1;
+  --chart-1: #6366f1;
+  --chart-2: #8b5cf6;
+  --chart-3: #06b6d4;
+  --chart-4: #10b981;
+  --chart-5: #f59e0b;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #171717;
+  --sidebar-primary: #6366f1;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f8fafc;
+  --sidebar-accent-foreground: #475569;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #6366f1;
+  --font-instrument-serif: "Instrument Serif", serif;
+  --font-figtree: "Figtree", sans-serif;
 }
 
 @theme inline {
