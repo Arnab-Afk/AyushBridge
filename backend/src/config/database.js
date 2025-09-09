@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const logger = require('../utils/logger');
 
 // Create connection string for Neon
-const connectionString = `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?sslmode=require`;
+const connectionString = process.env.DATABASE_URL || `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?sslmode=require`;
 
 // Create Sequelize instance
 const sequelize = new Sequelize(connectionString, {
@@ -53,8 +53,8 @@ async function connectDB() {
     
     // Sync models in development
     if (process.env.NODE_ENV === 'development') {
-      await sequelize.sync({ alter: true });
-      logger.info('Database models synchronized');
+      // await sequelize.sync({ alter: false });
+      logger.info('Database models synchronization disabled');
     }
     
     return sequelize;

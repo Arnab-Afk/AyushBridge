@@ -54,8 +54,9 @@ async function connectRedis() {
     logger.info('Redis connection established successfully');
     return redis;
   } catch (error) {
-    logger.error('Failed to connect to Redis:', error);
-    throw error;
+    logger.warn('Redis connection failed, continuing without Redis:', error.message);
+    logger.warn('Some caching features will be disabled');
+    return null;
   }
 }
 
@@ -75,6 +76,9 @@ const cache = {
   // Get value from cache
   get: async (key) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return null;
+      }
       const value = await redis.get(key);
       return value ? JSON.parse(value) : null;
     } catch (error) {
@@ -86,6 +90,9 @@ const cache = {
   // Set value in cache with TTL
   set: async (key, value, ttl = 3600) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return false;
+      }
       await redis.setex(key, ttl, JSON.stringify(value));
       return true;
     } catch (error) {
@@ -97,6 +104,9 @@ const cache = {
   // Delete key from cache
   del: async (key) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return false;
+      }
       await redis.del(key);
       return true;
     } catch (error) {
@@ -108,6 +118,9 @@ const cache = {
   // Check if key exists
   exists: async (key) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return false;
+      }
       const exists = await redis.exists(key);
       return exists === 1;
     } catch (error) {
@@ -119,6 +132,9 @@ const cache = {
   // Set with expiration time
   setex: async (key, seconds, value) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return false;
+      }
       await redis.setex(key, seconds, JSON.stringify(value));
       return true;
     } catch (error) {
@@ -130,6 +146,9 @@ const cache = {
   // Increment counter
   incr: async (key, ttl = 3600) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return 0;
+      }
       const value = await redis.incr(key);
       if (value === 1) {
         await redis.expire(key, ttl);
@@ -144,6 +163,9 @@ const cache = {
   // Get multiple keys
   mget: async (keys) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return [];
+      }
       const values = await redis.mget(keys);
       return values.map(value => value ? JSON.parse(value) : null);
     } catch (error) {
@@ -155,6 +177,9 @@ const cache = {
   // Set multiple key-value pairs
   mset: async (keyValuePairs, ttl = 3600) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return false;
+      }
       const pipeline = redis.pipeline();
       
       for (const [key, value] of Object.entries(keyValuePairs)) {
@@ -172,6 +197,9 @@ const cache = {
   // Clear cache by pattern
   clearPattern: async (pattern) => {
     try {
+      if (!redis || redis.status !== 'ready') {
+        return 0;
+      }
       const keys = await redis.keys(pattern);
       if (keys.length > 0) {
         await redis.del(...keys);
