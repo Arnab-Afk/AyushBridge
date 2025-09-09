@@ -68,7 +68,6 @@ export default function BundlesPage() {
               <nav className="hidden md:flex space-x-6">
                 <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
                 <a href="/bundles" className="text-indigo-600 font-medium">Bundles</a>
-                <a href="/mappings" className="text-gray-600 hover:text-gray-900 transition-colors">Mappings</a>
                 <a href="/terminology" className="text-gray-600 hover:text-gray-900 transition-colors">Terminology</a>
               </nav>
             </div>

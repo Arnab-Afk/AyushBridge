@@ -92,15 +92,12 @@ export default function TerminologyExplorerPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-gray-900 rounded"></div>
                 <span className="text-lg font-semibold text-gray-900">AyushBridge</span>
               </div>
               <nav className="hidden md:flex space-x-6">
                 <a href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
-                <a href="/terminology" className="text-indigo-600 font-medium">Terminology Explorer</a>
-                <a href="/mappings" className="text-gray-600 hover:text-gray-900 transition-colors">Mapping Tools</a>
-                <a href="/documentation" className="text-gray-600 hover:text-gray-900 transition-colors">Documentation</a>
-                <a href="/support" className="text-gray-600 hover:text-gray-900 transition-colors">Support</a>
+                <a href="/terminology" className="text-indigo-600 font-medium">Terminology</a>
+                <a href="/bundles" className="text-indigo-600 font-medium">Bundles</a>
               </nav>
             </div>
             <div className="flex items-center space-x-3">
@@ -109,7 +106,7 @@ export default function TerminologyExplorerPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </button>
-              <div className="w-8 h-8 bg-gray-900 rounded-full"></div>
+              
             </div>
           </div>
         </div>
