@@ -12,7 +12,6 @@ const swaggerSpec = require('./config/swagger');
 const logger = require('./utils/logger');
 const { errorHandler } = require('./middleware/errorHandler');
 const { connectDB } = require('./config/database');
-const { connectRedis } = require('./config/redis');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
