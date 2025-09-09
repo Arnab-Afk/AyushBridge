@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MindPath - Your Path to Better Mental Health",
-  description: "Online mental health service in Ireland specialising in Adult ADHD & Autism Assessment, Diagnosis & Aftercare. Accessible pathway to diagnosis guided by experts.",
+  title: "AyushBridge - Seamless Integration of NAMASTE & ICD-11 TM2",
+  description: "A FHIR R4-Compliant Terminology Microservice for Harmonizing Healthcare Data. Empowering Healthcare with Advanced Terminology Integration.",
 };
 
 export default function RootLayout({
