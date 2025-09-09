@@ -151,9 +151,6 @@ async function startServer() {
     await connectDB();
     logger.info('PostgreSQL database connected successfully');
     
-    // Connect to Redis (if available)
-    await connectRedis();
-    
     // Start the server
     const server = app.listen(PORT, () => {
       logger.info(`🚀 AyushBridge server is running on port ${PORT}`);
