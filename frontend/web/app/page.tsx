@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white shadow-sm ">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -40,7 +40,7 @@ export default function Home() {
       <section className="relative bg-gradient-to-br from-teal-800 to-blue-900 py-32 overflow-hidden min-h-screen">
         {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-200"
           style={{
             backgroundImage: 'url(/image.png)',
           }}
@@ -61,9 +61,9 @@ export default function Home() {
                 A FHIR R4-Compliant Terminology Microservice for Harmonizing Healthcare Data
               </p>
               <div className="flex justify-center">
-                <Link href="/request-demo" className="bg-blue-600 text-white px-12 py-4 rounded-lg text-xl font-semibold hover:bg-blue-700 shadow-xl">
+                {/* <Link href="/request-demo" className="bg-blue-600 text-white px-12 py-4 rounded-lg text-xl font-semibold hover:bg-blue-700 shadow-xl">
                   Request a Demo
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
