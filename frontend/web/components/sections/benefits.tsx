@@ -23,14 +23,14 @@ const benefits = [
     description: "Bridge traditional and modern medicine with dual-coding capabilities for insurance claims and healthcare analytics.",
     metric: "100% FHIR R4 compliant",
     gradient: "from-purple-500 to-pink-500",
-    icon: "�"
+    icon: "🔗"
   },
   {
     title: "Cost Effective Solution",
     description: "Reduce infrastructure costs with lightweight microservice architecture and cloud-ready deployment options.",
     metric: "60% cost reduction",
     gradient: "from-orange-500 to-red-500",
-    icon: "�"
+    icon: "💰"
   },
   {
     title: "Enterprise Security",
@@ -50,52 +50,65 @@ const benefits = [
 
 export default function Benefits() {
   return (
-    <section className="py-24 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6 text-gray-900">
-            Why Choose
+    <section className="py-32 bg-white">
+      <div className="container mx-auto px-8">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100/80 backdrop-blur-sm mb-6">
+            <span className="text-gray-600 text-sm font-light">📊 Platform Impact</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl font-light mb-6 text-gray-900 tracking-tight">
+            Measurable
             <br />
-            <span className="text-indigo-600">
-              AyushBridge
-            </span>
+            <span className="font-medium text-gray-800">Healthcare Outcomes</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Transform your traditional medicine practice with enterprise-grade terminology management. 
-            Discover the measurable benefits that leading healthcare organizations experience with our platform.
+          <p className="text-lg font-light text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Real results from healthcare organizations using AyushBridge for traditional medicine integration
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
           {benefits.map((benefit, index) => (
-            <Card key={index} className="group border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 rounded-lg">
-              {/* Minimal Header with Icon */}
-              <div className="h-32 bg-gray-50 relative overflow-hidden flex items-center justify-center">
-                <div className="text-3xl text-gray-600">
-                  {benefit.icon}
-                </div>
-                <div className="absolute top-4 right-4">
-                  <Badge variant="secondary" className="bg-indigo-100 text-indigo-700 border-0 text-xs">
+            <div key={index} className="group">
+              <div className="bg-gray-50/50 backdrop-blur-sm border border-gray-200/30 rounded-2xl p-8 hover:bg-gray-50/80 transition-all duration-500">
+                {/* Metric Badge */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="text-2xl text-gray-700">{benefit.icon}</div>
+                  <div className="px-3 py-1 bg-gray-900 text-white text-xs font-medium rounded-full">
                     {benefit.metric}
-                  </Badge>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Content */}
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3 text-gray-900">
+                
+                <h3 className="text-xl font-medium mb-4 text-gray-900">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                <p className="text-gray-600 text-sm font-light leading-relaxed mb-6">
                   {benefit.description}
                 </p>
-                <button className="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors flex items-center gap-2 group">
-                  Learn More
-                  <span className="transform transition-transform group-hover:translate-x-1">→</span>
+                <button className="text-gray-900 text-sm font-medium hover:text-gray-600 transition-colors flex items-center gap-2 group">
+                  Explore impact
+                  <span className="transform transition-transform group-hover:translate-x-1 text-xs">→</span>
                 </button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center">
+          <div className="max-w-2xl mx-auto bg-gray-900 rounded-3xl p-12 text-white">
+            <h3 className="text-3xl font-light mb-4">Ready to Transform Healthcare?</h3>
+            <p className="text-gray-300 font-light mb-8 leading-relaxed">
+              Join leading organizations integrating traditional medicine with modern standards
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button className="px-8 py-3 rounded-full bg-white text-gray-900 font-medium text-sm transition-all duration-200 hover:bg-gray-100">
+                Start Integration
+              </button>
+              <button className="px-8 py-3 rounded-full border border-white/30 text-white font-medium text-sm transition-all duration-200 hover:bg-white/10">
+                Schedule Demo
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>

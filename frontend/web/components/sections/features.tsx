@@ -44,46 +44,43 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6 text-gray-900">
-            Explore Our
+    <section className="py-32 bg-gray-50/50">
+      <div className="container mx-auto px-8">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100/80 backdrop-blur-sm mb-6">
+            <span className="text-gray-600 text-sm font-light">✨ Platform Capabilities</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl font-light mb-6 text-gray-900 tracking-tight">
+            Enterprise-Grade
             <br />
-            <span className="text-indigo-600">
-              Latest Features
-            </span>
+            <span className="font-medium text-gray-800">Terminology Platform</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            From FHIR-compliant terminology management to AI-powered code translation, our platform helps healthcare organizations scale smarter. 
-            Explore the comprehensive features we've built for traditional medicine digitization.
+          <p className="text-lg font-light text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            FHIR-compliant infrastructure connecting traditional medicine with modern healthcare standards
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {features.map((feature, index) => (
-            <Card key={index} className="group border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 rounded-lg">
-              {/* Minimal Header */}
-              <div className="h-32 bg-gray-50 relative overflow-hidden flex items-center justify-center">
-                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <div className="w-6 h-6 bg-indigo-600 rounded"></div>
+            <div key={index} className="group">
+              <div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-8 hover:bg-white/80 transition-all duration-500 hover:shadow-xl hover:shadow-gray-200/50">
+                {/* Minimal Icon */}
+                <div className="w-12 h-12 bg-gray-900 rounded-xl mb-6 flex items-center justify-center">
+                  <div className="w-6 h-6 bg-white rounded-sm"></div>
                 </div>
-              </div>
-              
-              {/* Content */}
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-3 text-gray-900">
+                
+                <h3 className="text-xl font-medium mb-4 text-gray-900">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                <p className="text-gray-600 text-sm font-light leading-relaxed mb-6">
                   {feature.description}
                 </p>
-                <button className="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors flex items-center gap-2 group">
-                  View Details
-                  <span className="transform transition-transform group-hover:translate-x-1">→</span>
+                <button className="text-gray-900 text-sm font-medium hover:text-gray-600 transition-colors flex items-center gap-2 group">
+                  Learn more
+                  <span className="transform transition-transform group-hover:translate-x-1 text-xs">→</span>
                 </button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>

@@ -64,95 +64,95 @@ const workflow = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4 border-gray-200 text-gray-600">
-            ⚙️ How It Works
-          </Badge>
-          <h2 className="text-4xl font-bold mb-6 text-gray-900">
-            Simple <span className="text-indigo-600">4-Step Integration</span>
+    <section className="py-32 bg-gray-50/50">
+      <div className="container mx-auto px-8">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-gray-100/80 backdrop-blur-sm mb-6">
+            <span className="text-gray-600 text-sm font-light">⚙️ Integration Process</span>
+          </div>
+          <h2 className="text-5xl md:text-6xl font-light mb-6 text-gray-900 tracking-tight">
+            Simple
+            <br />
+            <span className="font-medium text-gray-800">4-Step Integration</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Get up and running with AyushBridge in minutes, not months. Our streamlined process ensures quick deployment and immediate value.
+          <p className="text-lg font-light text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Deploy AyushBridge in minutes with our streamlined integration process
           </p>
         </div>
 
         {/* Implementation Steps */}
-        <div className="mb-16">
-          <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        <div className="mb-24">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {steps.map((step, index) => (
-              <Card key={index} className="group border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 rounded-lg">
-                <div className="absolute top-4 right-4">
-                  <Badge variant="default" className="text-sm px-3 py-1 bg-indigo-600 text-white">
-                    {step.step}
-                  </Badge>
-                </div>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <span className="text-2xl">{step.icon}</span>
-                    <CardTitle className="text-lg text-gray-900">{step.title}</CardTitle>
+              <div key={index} className="group relative">
+                <div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-8 hover:bg-white/80 transition-all duration-500">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="text-2xl text-gray-700">{step.icon}</div>
+                      <div>
+                        <h3 className="text-xl font-medium text-gray-900">{step.title}</h3>
+                        <p className="text-gray-600 text-sm font-light mt-1">{step.description}</p>
+                      </div>
+                    </div>
+                    <div className="px-3 py-1 bg-gray-900 text-white text-xs font-medium rounded-full">
+                      {step.step}
+                    </div>
                   </div>
-                  <CardDescription className="text-gray-600">
-                    {step.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
+                  
+                  <ul className="space-y-3">
                     {step.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-gray-600">
-                        <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-3 flex-shrink-0"></span>
+                      <li key={idx} className="flex items-center text-sm text-gray-600 font-light">
+                        <span className="w-1.5 h-1.5 bg-gray-900 rounded-full mr-3 flex-shrink-0"></span>
                         {detail}
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
 
         {/* Workflow Diagram */}
-        <div>
-          <h3 className="text-2xl font-semibold text-center mb-8 text-gray-900">Clinical Workflow</h3>
-          <Card className="max-w-4xl mx-auto border border-gray-200 bg-white rounded-lg">
-            <CardHeader>
-              <CardTitle className="text-center text-gray-900">From Traditional Terms to Standardized Codes</CardTitle>
-              <CardDescription className="text-center text-gray-600">
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-3xl font-light text-center mb-12 text-gray-900">Clinical Workflow</h3>
+          <div className="bg-white/60 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-8">
+            <div className="text-center mb-8">
+              <h4 className="text-xl font-medium text-gray-900 mb-2">From Traditional Terms to Standardized Codes</h4>
+              <p className="text-gray-600 font-light">
                 Seamless workflow for dual-coding traditional medicine conditions
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {workflow.map((flow, index) => (
-                  <div key={index} className="flex items-center space-x-4">
-                    <div className="flex-shrink-0">
-                      <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-700">
-                        {index + 1}
-                      </Badge>
-                    </div>
-                    <div className="flex-1 bg-gray-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm text-gray-900">{flow.from}</span>
-                        <span className="text-gray-400">→</span>
-                        <span className="font-medium text-sm text-gray-900">{flow.to}</span>
-                      </div>
-                      <p className="text-xs text-gray-600 mt-2">{flow.description}</p>
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              {workflow.map((flow, index) => (
+                <div key={index} className="flex items-center space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-gray-900 text-white text-xs font-medium rounded-full flex items-center justify-center">
+                      {index + 1}
                     </div>
                   </div>
-                ))}
-              </div>
-              
-              <div className="mt-8 text-center">
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h4 className="font-semibold text-sm mb-2 text-gray-900">Result: Complete Dual-Coded Medical Record</h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    FHIR Condition resource with NAMASTE traditional terms + ICD-11 standardized codes + audit trails
-                  </p>
+                  <div className="flex-1 bg-gray-50/70 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-sm text-gray-900">{flow.from}</span>
+                      <span className="text-gray-400 text-sm">→</span>
+                      <span className="font-medium text-sm text-gray-900">{flow.to}</span>
+                    </div>
+                    <p className="text-xs text-gray-600 font-light mt-2">{flow.description}</p>
+                  </div>
                 </div>
+              ))}
+            </div>
+            
+            <div className="mt-8 text-center">
+              <div className="bg-gray-900 rounded-xl p-6 text-white">
+                <h4 className="font-medium text-sm mb-2">Result: Complete Dual-Coded Medical Record</h4>
+                <p className="text-xs text-gray-300 font-light leading-relaxed">
+                  FHIR Condition resource with NAMASTE traditional terms + ICD-11 standardized codes + audit trails
+                </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </section>
