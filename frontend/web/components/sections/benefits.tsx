@@ -97,26 +97,6 @@ export default function Benefits() {
             </Card>
           ))}
         </div>
-
-        {/* Call to Action */}
-        <div className="text-center">
-          <Card className="max-w-2xl mx-auto border border-gray-200 bg-white rounded-lg">
-            <div className="bg-indigo-600 p-8 text-white rounded-lg">
-              <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Healthcare System?</h3>
-              <p className="text-indigo-100 mb-6 leading-relaxed">
-                Join leading healthcare organizations using AyushBridge for seamless traditional medicine integration
-              </p>
-              <div className="flex gap-4 justify-center">
-                <button className="px-8 py-3 rounded-lg bg-white text-indigo-600 font-medium text-sm transition-all duration-200 hover:bg-gray-100">
-                  Start Free Trial
-                </button>
-                <button className="px-8 py-3 rounded-lg border-2 border-white text-white font-medium text-sm transition-all duration-200 hover:bg-white hover:text-indigo-600">
-                  Schedule Demo
-                </button>
-              </div>
-            </div>
-          </Card>
-        </div>
       </div>
     </section>
   )
