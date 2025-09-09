@@ -4,30 +4,30 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white shadow-sm ">
+      <nav className="absolute top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <div className="text-2xl font-bold text-blue-900">AyushBridge</div>
+              <div className="text-2xl font-bold text-white">AyushBridge</div>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                <Link href="/features" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/features" className="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium">
                   Features
                 </Link>
-                <Link href="/benefits" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/benefits" className="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium">
                   Benefits
                 </Link>
-                <Link href="/how-it-works" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/how-it-works" className="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium">
                   How it Works
                 </Link>
-                <Link href="/partnerships" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/partnerships" className="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium">
                   Partnerships
                 </Link>
-                <Link href="/view-documentation" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                <Link href="/view-documentation" className="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium">
                   View Documentation
                 </Link>
-                <Link href="/request-demo" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                <Link href="/request-demo" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 border border-blue-500">
                   Request a Demo
                 </Link>
               </div>
