@@ -1,0 +1,401 @@
+export const metadata = {
+  title: 'ICD-11 Integration',
+  description:
+    'Learn how AyushBridge integrates with WHO ICD-11 Traditional Medicine Module 2 (TM2) and Biomedicine classifications for comprehensive dual-coding.',
+}
+
+export const sections = [
+  { title: 'ICD-11 Overview', id: 'icd11-overview' },
+  { title: 'Traditional Medicine Module 2', id: 'tm2-module' },
+  { title: 'Biomedicine Integration', id: 'biomedicine-integration' },
+  { title: 'Code Mapping', id: 'code-mapping' },
+  { title: 'Synchronization', id: 'synchronization' },
+  { title: 'Usage Examples', id: 'usage-examples' },
+]
+
+# ICD-11 Integration
+
+AyushBridge provides seamless integration with WHO ICD-11 classifications, enabling dual-coding between traditional medicine systems and international standards. {{ className: 'lead' }}
+
+## ICD-11 Overview {{ id: 'icd11-overview' }}
+
+The International Classification of Diseases 11th Revision (ICD-11) is the World Health Organization's latest global standard for health information and statistics. For traditional medicine integration, AyushBridge specifically works with:
+
+### Key Components
+- **Traditional Medicine Module 2 (TM2)**: 529 disorder categories and 196 pattern codes
+- **Biomedicine Classifications**: Standard ICD-11 disease classifications
+- **Cross-References**: Bidirectional mappings between systems
+
+### Benefits of ICD-11 Integration
+- **Global Interoperability**: International health data exchange
+- **Insurance Claims**: Standardized coding for reimbursement
+- **Research**: Comparative effectiveness studies
+- **Public Health**: Population health monitoring
+
+## Traditional Medicine Module 2 {{ id: 'tm2-module' }}
+
+ICD-11 TM2 provides standardized coding for traditional medicine disorders and patterns.
+
+### TM2 Structure
+```
+TM2 Root Categories:
+├── TM26 - Disorders of vata dosha
+├── TM27 - Disorders of pitta dosha  
+├── TM28 - Disorders of kapha dosha
+├── TM29 - Disorders of wind pattern
+├── TM30 - Disorders of fire pattern
+├── TM31 - Disorders of earth pattern
+└── TM32 - Disorders of water pattern
+```
+
+### Code Examples
+| ICD-11 TM2 Code | Display | Traditional System |
+|-----------------|---------|-------------------|
+| `TM26.0` | Disorders of vata dosha | Ayurveda |
+| `TM27.1` | Disorders of pitta dosha | Ayurveda |
+| `TM28.2` | Disorders of kapha dosha | Ayurveda |
+| `TM29.0` | Disorders of wind pattern | Traditional Chinese Medicine |
+| `TM30.1` | Disorders of fire pattern | Traditional Chinese Medicine |
+
+### FHIR CodeSystem Resource
+```json
+{
+  "resourceType": "CodeSystem",
+  "url": "http://id.who.int/icd/release/11/mms",
+  "version": "2022",
+  "name": "ICD11TM2",
+  "title": "ICD-11 Traditional Medicine Module 2",
+  "status": "active",
+  "content": "fragment",
+  "filter": [
+    {
+      "code": "concept",
+      "description": "Filter by TM2 concepts",
+      "value": "TM"
+    }
+  ]
+}
+```
+
+## Biomedicine Integration {{ id: 'biomedicine-integration' }}
+
+Integration with standard ICD-11 biomedicine classifications enables comprehensive dual-coding.
+
+### Common Biomedicine Mappings
+
+| Traditional Medicine | ICD-11 Biomedicine | Description |
+|---------------------|-------------------|-------------|
+| Amavata (NAM001) | FA20.00 | Rheumatoid arthritis, unspecified |
+| Jwara (NAM015) | MG2Y | Fever, unspecified |
+| Prameha (NAM028) | 5A11 | Type 2 diabetes mellitus |
+| Kasa (NAM042) | MD12 | Cough |
+
+### Triple Coding Example
+For comprehensive coverage, conditions can be coded with:
+1. **NAMASTE Code**: Traditional medicine terminology
+2. **ICD-11 TM2**: Traditional medicine international standard
+3. **ICD-11 Bio**: Biomedicine international standard
+
+```json
+{
+  "code": {
+    "coding": [
+      {
+        "system": "https://ayush.gov.in/fhir/CodeSystem/namaste",
+        "code": "NAM001",
+        "display": "Amavata"
+      },
+      {
+        "system": "http://id.who.int/icd/release/11/mms",
+        "code": "TM26.0",
+        "display": "Disorders of vata dosha"
+      },
+      {
+        "system": "http://id.who.int/icd/release/11/mms",
+        "code": "FA20.00",
+        "display": "Rheumatoid arthritis, unspecified"
+      }
+    ]
+  }
+}
+```
+
+## Code Mapping {{ id: 'code-mapping' }}
+
+AyushBridge maintains ConceptMap resources for bidirectional translation between coding systems.
+
+### Mapping Confidence Levels
+- **Equivalent** (1.0): Exact semantic match
+- **Narrower** (0.9): Source is narrower than target
+- **Broader** (0.8): Source is broader than target
+- **Inexact** (0.7): Approximate match
+- **Unmatched** (0.0): No suitable mapping
+
+### ConceptMap Resource Example
+```json
+{
+  "resourceType": "ConceptMap",
+  "id": "namaste-to-icd11-tm2",
+  "url": "https://ayushbridge.in/fhir/ConceptMap/namaste-to-icd11-tm2",
+  "version": "1.0.0",
+  "name": "NAMASTEToICD11TM2",
+  "status": "active",
+  "sourceUri": "https://ayush.gov.in/fhir/CodeSystem/namaste",
+  "targetUri": "http://id.who.int/icd/release/11/mms",
+  "group": [
+    {
+      "source": "https://ayush.gov.in/fhir/CodeSystem/namaste",
+      "target": "http://id.who.int/icd/release/11/mms",
+      "element": [
+        {
+          "code": "NAM001",
+          "display": "Amavata",
+          "target": [
+            {
+              "code": "TM26.0",
+              "display": "Disorders of vata dosha",
+              "equivalence": "equivalent",
+              "comment": "Direct mapping - both refer to vata dosha disorders"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Synchronization {{ id: 'synchronization' }}
+
+AyushBridge maintains real-time synchronization with the WHO ICD-11 API to ensure up-to-date classifications.
+
+### Sync Process
+1. **Scheduled Updates**: Daily synchronization at 2 AM UTC
+2. **Delta Processing**: Only new/changed codes are updated
+3. **Version Control**: Track ICD-11 release versions
+4. **Conflict Resolution**: Automated merge strategies
+5. **Audit Logging**: Complete sync operation trails
+
+### Sync Configuration
+```javascript
+{
+  "icd11Sync": {
+    "apiUrl": "https://id.who.int/icd/release/11",
+    "schedule": "0 2 * * *",
+    "modules": ["mms", "tm2"],
+    "batchSize": 100,
+    "retryAttempts": 3,
+    "authRefreshInterval": "55m"
+  }
+}
+```
+
+### Manual Sync Trigger
+<CodeGroup>
+
+```bash {{ title: 'cURL' }}
+curl -X POST "https://api.ayushbridge.in/admin/sync/icd11" \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"modules": ["tm2", "mms"], "force": true}'
+```
+
+```javascript {{ title: 'JavaScript' }}
+const triggerSync = async (modules, force = false, token) => {
+  const response = await fetch('https://api.ayushbridge.in/admin/sync/icd11', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ modules, force })
+  });
+  return await response.json();
+};
+
+// Trigger TM2 sync
+const result = await triggerSync(['tm2'], true, adminToken);
+console.log(`Sync status: ${result.status}`);
+```
+
+</CodeGroup>
+
+## Usage Examples {{ id: 'usage-examples' }}
+
+### Lookup ICD-11 TM2 Code
+
+<CodeGroup>
+
+```bash {{ title: 'cURL' }}
+curl -X GET "https://api.ayushbridge.in/fhir/CodeSystem/icd11/\$lookup?code=TM26.0" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Accept: application/fhir+json"
+```
+
+```javascript {{ title: 'JavaScript' }}
+const lookupICD11Code = async (code, token) => {
+  const response = await fetch(
+    `https://api.ayushbridge.in/fhir/CodeSystem/icd11/$lookup?code=${code}`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/fhir+json'
+      }
+    }
+  );
+  return await response.json();
+};
+
+// Lookup TM2 code
+const result = await lookupICD11Code('TM26.0', token);
+console.log(result.parameter.find(p => p.name === 'display').valueString);
+```
+
+</CodeGroup>
+
+### Translate NAMASTE to ICD-11
+
+<CodeGroup>
+
+```bash {{ title: 'cURL - NAMASTE to TM2' }}
+curl -X POST "https://api.ayushbridge.in/fhir/ConceptMap/namaste-to-icd11/\$translate" \
+  -H "Content-Type: application/fhir+json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{
+    "resourceType": "Parameters",
+    "parameter": [
+      {"name": "code", "valueCode": "NAM001"},
+      {"name": "system", "valueUri": "https://ayush.gov.in/fhir/CodeSystem/namaste"},
+      {"name": "target", "valueUri": "http://id.who.int/icd/release/11/mms"}
+    ]
+  }'
+```
+
+```javascript {{ title: 'JavaScript - Dual Translation' }}
+const getDualCoding = async (namasteCode, token) => {
+  // Translate to TM2
+  const tm2Translation = await translateCode(
+    namasteCode,
+    'https://ayush.gov.in/fhir/CodeSystem/namaste',
+    'http://id.who.int/icd/release/11/mms#tm2',
+    token
+  );
+  
+  // Translate to Biomedicine
+  const bioTranslation = await translateCode(
+    namasteCode,
+    'https://ayush.gov.in/fhir/CodeSystem/namaste',
+    'http://id.who.int/icd/release/11/mms#bio',
+    token
+  );
+  
+  return {
+    namaste: namasteCode,
+    tm2: tm2Translation.parameter.find(p => p.name === 'match')?.part.find(p => p.name === 'concept')?.valueCoding,
+    biomedicine: bioTranslation.parameter.find(p => p.name === 'match')?.part.find(p => p.name === 'concept')?.valueCoding
+  };
+};
+
+// Get triple coding
+const tripleCoding = await getDualCoding('NAM001', token);
+console.log('Triple coding:', tripleCoding);
+```
+
+</CodeGroup>
+
+### Search ICD-11 TM2 Codes
+
+<CodeGroup>
+
+```bash {{ title: 'cURL - TM2 Search' }}
+curl -X GET "https://api.ayushbridge.in/fhir/ValueSet/icd11-tm2/\$expand?filter=vata&count=10" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+```javascript {{ title: 'JavaScript - TM2 Search' }}
+const searchTM2Codes = async (query, token) => {
+  const response = await fetch(
+    `https://api.ayushbridge.in/fhir/ValueSet/icd11-tm2/$expand?filter=${query}&count=20`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/fhir+json'
+      }
+    }
+  );
+  const data = await response.json();
+  return data.expansion.contains;
+};
+
+// Search for vata-related TM2 codes
+const vataDisorders = await searchTM2Codes('vata', token);
+console.log(`Found ${vataDisorders.length} vata-related TM2 codes`);
+```
+
+</CodeGroup>
+
+### Create Triple-Coded Condition
+
+<CodeGroup>
+
+```javascript {{ title: 'JavaScript - Triple Coding' }}
+const createTripleCodedCondition = async (patientId, codes, token) => {
+  const condition = {
+    resourceType: 'Condition',
+    subject: { reference: `Patient/${patientId}` },
+    code: {
+      coding: [
+        {
+          system: 'https://ayush.gov.in/fhir/CodeSystem/namaste',
+          code: codes.namaste.code,
+          display: codes.namaste.display
+        },
+        {
+          system: 'http://id.who.int/icd/release/11/mms',
+          code: codes.tm2.code,
+          display: codes.tm2.display
+        },
+        {
+          system: 'http://id.who.int/icd/release/11/mms',
+          code: codes.biomedicine.code,
+          display: codes.biomedicine.display
+        }
+      ]
+    },
+    clinicalStatus: {
+      coding: [{
+        system: 'http://terminology.hl7.org/CodeSystem/condition-clinical',
+        code: 'active'
+      }]
+    },
+    meta: {
+      tag: [
+        {
+          system: 'https://ayushbridge.in/fhir/CodeSystem/coding-type',
+          code: 'triple-coded',
+          display: 'Triple-coded condition'
+        }
+      ]
+    }
+  };
+
+  const response = await fetch('https://api.ayushbridge.in/fhir/Condition', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/fhir+json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(condition)
+  });
+  
+  return await response.json();
+};
+```
+
+</CodeGroup>
+
+<div className="not-prose">
+  <Button href="/terminologies/who-ayurveda" variant="text" arrow="right">
+    <>Learn about WHO Ayurveda terminologies</>
+  </Button>
+</div>

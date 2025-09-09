@@ -1,0 +1,111 @@
+import { Guides } from '@/components/Guides'
+import { Resources } from '@/components/Resources'
+import { HeroPattern } from '@/components/HeroPattern'
+
+export const metadata = {
+  title: 'AyushBridge - FHIR R4 Terminology Service',
+  description:
+    'A FHIR R4-compliant terminology microservice for NAMASTE & ICD-11 TM2 integration, bridging traditional medicine and modern healthcare systems.',
+}
+
+export const sections = [
+  { title: 'Problem Statement', id: 'problem-statement' },
+  { title: 'Solution Overview', id: 'solution-overview' },
+  { title: 'Key Features', id: 'key-features' },
+  { title: 'Getting Started', id: 'getting-started' },
+]
+
+<HeroPattern />
+
+# AyushBridge
+
+## A FHIR R4-Compliant Terminology Microservice for NAMASTE & ICD-11 TM2 Integration
+
+
+
+AyushBridge is a lightweight terminology microservice that bridges NAMASTE codes, WHO International Terminologies for Ayurveda, and WHO ICD-11 classifications to enable comprehensive dual-coding capabilities for traditional medicine EMR systems. {{ className: 'lead' }}
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button href="/quickstart" arrow="right">
+    <>Quick Start</>
+  </Button>
+  <Button href="/api-reference" variant="outline">
+    <>API Reference</>
+  </Button>
+</div>
+
+## Problem Statement {{ anchor: false, id: 'problem-statement' }}
+
+India's Ayush sector is rapidly transitioning from paper-based records to interoperable digital health systems. Central to this transformation are key coding systems that need harmonization: {{ className: 'lead' }}
+
+### Key Terminologies
+
+**NAMASTE** (National AYUSH Morbidity & Standardized Terminologies Electronic)
+- 4,500+ standardized terms for Ayurveda, Siddha, and Unani disorders
+- Essential for traditional medicine documentation in India
+
+**WHO ICD-11 Traditional Medicine Module 2 (TM2)**
+- 529 disorder categories and 196 pattern codes
+- Integrated into the global ICD framework for international compatibility
+
+**WHO Standardized International Terminologies for Ayurveda**
+- Globally recognized Ayurvedic terminology standards
+- Bridge between traditional knowledge and modern healthcare systems
+
+### Compliance Requirements
+- **India's 2016 EHR Standards**: FHIR R4 APIs, SNOMED CT and LOINC semantics
+- **Security**: ISO 22600 access control, ABHA-linked OAuth 2.0 authentication
+- **Audit**: Robust trails for consent and versioning
+- **Interoperability**: Dual-coding support for insurance claims and analytics
+
+## Solution Overview {{ anchor: false, id: 'solution-overview' }}
+
+AyushBridge bridges the gap between traditional medicine coding systems and modern healthcare interoperability standards through a comprehensive FHIR R4-compliant API. {{ className: 'lead' }}
+
+### Core Capabilities
+- **FHIR R4-compliant** terminology resources
+- **Auto-complete search** with intelligent suggestions
+- **Bidirectional code translation** (NAMASTE ↔ ICD-11 TM2/Biomedicine)
+- **Secure FHIR Bundle uploads** with OAuth 2.0
+- **Real-time synchronization** with WHO ICD-11 API
+- **Audit-ready metadata** for compliance
+
+## Key Features {{ anchor: false, id: 'key-features' }}
+
+### 🔍 Terminology Management
+- **NAMASTE CodeSystem**: Complete FHIR-compliant resource with 4,500+ terms
+- **ICD-11 Integration**: Full TM2 and Biomedicine module synchronization
+- **WHO Ayurveda Terms**: International standardized terminology support
+- **ConceptMap Resources**: Bidirectional mapping between all code systems
+
+### 🔎 Search & Discovery
+- **Auto-Complete API**: Fast terminology lookup with intelligent suggestions
+- **Faceted Search**: Filter by traditional medicine system (Ayurveda/Siddha/Unani)
+- **Semantic Search**: Natural language query support
+- **Multilingual Support**: English, Hindi, and regional language support
+
+### 🔄 Code Translation
+- **NAMASTE → ICD-11 TM2**: Traditional to standardized codes
+- **ICD-11 Bio ↔ TM2**: Biomedicine and traditional medicine mapping
+- **Batch Translation**: Process multiple codes simultaneously
+- **Confidence Scoring**: Mapping quality indicators
+
+### 🔐 Security & Compliance
+- **ABHA Authentication**: OAuth 2.0 integration with India's health ID
+- **Role-Based Access**: Clinician, administrator, and audit roles
+- **Audit Trails**: Comprehensive logging for all operations
+- **Data Privacy**: GDPR and Indian data protection compliance
+
+## Getting Started {{ anchor: false, id: 'getting-started' }}
+
+To get started with AyushBridge, follow our quick start guide to set up authentication, explore the FHIR terminology resources, and implement dual-coding in your healthcare application. {{ className: 'lead' }}
+
+<div className="not-prose">
+  <Button href="/quickstart" variant="text" arrow="right">
+    <>Installation Guide</>
+  </Button>
+</div>
+
+<Guides />
+
+<Resources />

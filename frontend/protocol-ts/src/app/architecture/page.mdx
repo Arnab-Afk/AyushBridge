@@ -1,0 +1,190 @@
+export const metadata = {
+  title: 'System Architecture',
+  description:
+    'Learn about AyushBridge system architecture, components, and how they work together to provide FHIR R4-compliant terminology services.',
+}
+
+export const sections = [
+  { title: 'Overview', id: 'overview' },
+  { title: 'Core Components', id: 'core-components' },
+  { title: 'Data Flow', id: 'data-flow' },
+  { title: 'Security Architecture', id: 'security-architecture' },
+  { title: 'Deployment Options', id: 'deployment-options' },
+]
+
+# System Architecture
+
+AyushBridge follows a microservices architecture designed for scalability, security, and compliance with India's EHR standards and FHIR R4 specifications. {{ className: 'lead' }}
+
+## Overview {{ id: 'overview' }}
+
+The system is built around a core terminology service that bridges multiple healthcare coding systems, with dedicated modules for authentication, data synchronization, and audit compliance.
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   EMR Frontend  │────│  API Gateway     │────│ Terminology     │
+│   (Clinical UI) │    │  (OAuth 2.0)     │    │ Microservice    │
+│   - Auto-complete│    │  - Rate Limiting │    │ - FHIR Resources│
+│   - Dual Coding │    │  - Authentication│    │ - Code Mapping  │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                                      │
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   ABHA Identity │────│  Authentication  │    │ FHIR Resources  │
+│   Provider      │    │  Service         │    │ & Storage       │
+│   - Health ID   │    │  - JWT Tokens    │    │ - CodeSystems   │
+│   - OAuth 2.0   │    │  - Role-based    │    │ - ConceptMaps   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                                      │
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ WHO ICD-11 API  │────│ External API     │    │ Database Layer  │
+│ (TM2 & Bio)     │    │ Sync Service     │    │ & Cache         │
+│ - Real-time sync│    │ - Version control│    │ - MongoDB/SQL   │
+│ - Updates       │    │ - Error handling │    │ - Redis Cache   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+## Core Components {{ id: 'core-components' }}
+
+### API Gateway
+- **Rate Limiting**: Prevents abuse and ensures fair usage
+- **Authentication**: ABHA OAuth 2.0 integration
+- **Request Routing**: Intelligent routing to backend services
+- **Monitoring**: Real-time performance metrics
+
+### Terminology Service
+- **FHIR R4 Compliance**: Full implementation of terminology resources
+- **Code Translation**: Bidirectional mapping between systems
+- **Search Engine**: Elasticsearch-powered terminology lookup
+- **Validation**: FHIR resource validation and conformance
+
+### Authentication Service
+- **ABHA Integration**: India's health ID provider integration
+- **JWT Management**: Token generation and validation
+- **Role-Based Access**: Granular permission system
+- **Session Management**: Secure session handling
+
+### Data Synchronization
+- **WHO ICD-11 Sync**: Real-time updates from official API
+- **Version Control**: Terminology version management
+- **Conflict Resolution**: Automated merge strategies
+- **Error Handling**: Robust error recovery mechanisms
+
+## Data Flow {{ id: 'data-flow' }}
+
+### Search Request Flow
+1. **Client Request**: EMR system sends search query
+2. **Authentication**: ABHA token validation
+3. **Query Processing**: Natural language processing
+4. **Database Query**: Elasticsearch terminology search
+5. **Result Assembly**: FHIR-compliant response
+6. **Response Delivery**: Structured terminology results
+
+### Code Translation Flow
+1. **Translation Request**: Source code with target system
+2. **Lookup**: Source code validation and lookup
+3. **Mapping Engine**: ConceptMap resource evaluation
+4. **Confidence Scoring**: Quality assessment
+5. **Response**: Target codes with confidence metrics
+
+### Data Synchronization Flow
+1. **Schedule Trigger**: Automated or manual sync initiation
+2. **API Authentication**: WHO ICD-11 API credentials
+3. **Delta Retrieval**: Incremental updates only
+4. **Validation**: Data integrity checks
+5. **Database Update**: Atomic transaction processing
+6. **Audit Logging**: Complete operation trail
+
+## Security Architecture {{ id: 'security-architecture' }}
+
+### Authentication & Authorization
+- **OAuth 2.0**: ABHA provider integration
+- **JWT Tokens**: Stateless authentication
+- **Role-Based Access Control**: Granular permissions
+- **API Key Management**: Service-to-service authentication
+
+### Data Protection
+- **Encryption at Rest**: AES-256 database encryption
+- **Encryption in Transit**: TLS 1.3 for all communications
+- **Data Masking**: Sensitive data protection
+- **Audit Trails**: Comprehensive logging for compliance
+
+### Network Security
+- **API Gateway**: Centralized security enforcement
+- **Rate Limiting**: DDoS protection
+- **IP Whitelisting**: Restricted access controls
+- **VPN/Private Networks**: Secure connectivity options
+
+## Deployment Options {{ id: 'deployment-options' }}
+
+### Container Deployment
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  api-gateway:
+    image: ayushbridge/api-gateway:latest
+    ports:
+      - "443:443"
+    environment:
+      - ABHA_CLIENT_ID=${ABHA_CLIENT_ID}
+      - JWT_SECRET=${JWT_SECRET}
+  
+  terminology-service:
+    image: ayushbridge/terminology:latest
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - DB_URI=mongodb://mongodb:27017/ayushbridge
+      - REDIS_URI=redis://redis:6379
+  
+  mongodb:
+    image: mongo:5.0
+    volumes:
+      - mongodb_data:/data/db
+  
+  redis:
+    image: redis:6.0
+    volumes:
+      - redis_data:/data
+```
+
+### Kubernetes Deployment
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ayushbridge-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ayushbridge-api
+  template:
+    metadata:
+      labels:
+        app: ayushbridge-api
+    spec:
+      containers:
+      - name: api
+        image: ayushbridge/api:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_URI
+          valueFrom:
+            secretKeyRef:
+              name: ayushbridge-secrets
+              key: db-uri
+        - name: ABHA_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ayushbridge-secrets
+              key: abha-client-secret
+```
+
+### Cloud Deployment
+- **AWS**: ECS/EKS with RDS and ElastiCache
+- **Azure**: Container Instances with Cosmos DB
+- **Google Cloud**: GKE with Cloud SQL and Memorystore
+- **On-Premises**: Docker Swarm or Kubernetes

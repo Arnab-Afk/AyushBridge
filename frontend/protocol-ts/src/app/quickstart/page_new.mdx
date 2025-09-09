@@ -1,0 +1,155 @@
+export const metadata = {
+  title: 'Quick Start Guide',
+  description:
+    'Get started with AyushBridge in minutes. This guide covers installation, ABHA authentication setup, and making your first FHIR terminology requests.',
+}
+
+# Quick Start Guide
+
+Get up and running with AyushBridge in minutes. This guide covers installation, ABHA authentication setup, and making your first FHIR terminology requests to bridge NAMASTE codes with ICD-11 classifications. {{ className: 'lead' }}
+
+<Note>
+  Before you can make requests to the AyushBridge API, you will need to obtain ABHA OAuth 2.0 credentials and configure your authentication. Visit the [ABHA Developer Portal](https://abha.abdm.gov.in/developers) to get started.
+</Note>
+
+## Prerequisites
+
+Before beginning, ensure you have the following installed and configured:
+
+<CodeGroup>
+
+```bash {{ title: 'System Requirements' }}
+# Required software versions
+Node.js 18+ or Java 17+
+MongoDB 5.0+ or PostgreSQL 13+
+Redis 6.0+ (optional, for caching)
+Docker 20.10+ (optional, for containerized deployment)
+```
+
+```bash {{ title: 'ABHA Prerequisites' }}
+# ABHA OAuth 2.0 Credentials Required:
+# - Client ID
+# - Client Secret 
+# - Redirect URI
+# - Scopes: openid, profile, abha-enrol
+```
+
+</CodeGroup>
+
+## Installation Options
+
+Choose your preferred installation method. AyushBridge can be deployed as a standalone service, Docker container, or Kubernetes cluster.
+
+<CodeGroup>
+
+```bash {{ title: 'npm/Node.js' }}
+# Clone the repository
+git clone https://github.com/Arnab-Afk/AyushBridge.git
+cd AyushBridge
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+```
+
+```bash {{ title: 'Docker' }}
+# Pull the official image
+docker pull ayushbridge/api:latest
+
+# Run with Docker Compose
+curl -o docker-compose.yml https://raw.githubusercontent.com/Arnab-Afk/AyushBridge/main/docker-compose.yml
+docker-compose up -d
+```
+
+```bash {{ title: 'Kubernetes' }}
+# Deploy to Kubernetes cluster
+kubectl apply -f https://raw.githubusercontent.com/Arnab-Afk/AyushBridge/main/k8s/
+
+# Check deployment status
+kubectl get pods -l app=ayushbridge
+```
+
+</CodeGroup>
+
+## Making Your First API Request
+
+Now you're ready to make your first terminology lookup request:
+
+<CodeGroup tag="GET" label="/fhir/ValueSet/namaste/$expand">
+
+```bash {{ title: 'cURL' }}
+# Search for NAMASTE terms
+curl -X GET "http://localhost:3000/fhir/ValueSet/namaste/\$expand?filter=amavata&count=5" \
+  -H "Authorization: Bearer YOUR_ABHA_TOKEN" \
+  -H "Accept: application/fhir+json"
+```
+
+```javascript {{ title: 'JavaScript/Node.js' }}
+// AyushBridge FHIR client
+const searchTerms = async (query, token) => {
+  const response = await fetch(
+    `http://localhost:3000/fhir/ValueSet/namaste/$expand?filter=${query}&count=10`,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/fhir+json'
+      }
+    }
+  );
+  
+  const data = await response.json();
+  return data.expansion.contains;
+};
+
+// Usage
+const token = await getToken();
+const terms = await searchTerms('amavata', token);
+console.log('Found terms:', terms);
+```
+
+```python {{ title: 'Python' }}
+import requests
+
+def search_namaste_terms(query, token):
+    response = requests.get(
+        f'http://localhost:3000/fhir/ValueSet/namaste/$expand',
+        params={'filter': query, 'count': 10},
+        headers={
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/fhir+json'
+        }
+    )
+    data = response.json()
+    return data.get('expansion', {}).get('contains', [])
+
+# Usage
+token = get_abha_token()
+terms = search_namaste_terms('amavata', token)
+print(f'Found {len(terms)} terms')
+```
+
+</CodeGroup>
+
+<div className="not-prose">
+  <Button href="/api-reference" variant="text" arrow="right">
+    <>Explore the complete API reference</>
+  </Button>
+</div>
+
+## What's Next?
+
+Congratulations! You've successfully set up AyushBridge and made your first terminology requests. Here are some recommended next steps:
+
+- [Explore the complete API Reference](/api-reference) for all available endpoints
+- [Learn about NAMASTE CodeSystem](/terminologies/namaste) and available codes
+- [Understand ICD-11 Integration](/terminologies/icd11) and mapping strategies
+- [Set up Authentication](/authentication) for production environments
+- [Review the Architecture](/architecture) to understand system components
+
+<div className="not-prose">
+  <Button href="/terminologies" variant="text" arrow="right">
+    <>Learn about supported terminologies</>
+  </Button>
+</div>
