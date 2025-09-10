@@ -8,23 +8,27 @@ export async function GET() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      // Add timeout to prevent hanging during build
+      signal: AbortSignal.timeout(5000)
     })
-    
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error: any) {
     console.error('Error fetching stats:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to fetch chatbot statistics',
-        stats: {
-          is_initialized: false,
-          total_chunks: 0,
-          error: 'Connection error'
-        }
+    // Return fallback data for build time or when service is unavailable
+    return NextResponse.json({
+      success: true,
+      stats: {
+        is_initialized: false,
+        total_chunks: 0,
+        error: 'Service unavailable during build'
       }
-    )
+    })
   }
 }
