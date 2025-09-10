@@ -243,6 +243,7 @@ export const navigation: Array<NavGroup> = [
     title: 'API Reference',
     links: [
       { title: 'API Overview', href: '/api-reference' },
+      { title: 'API Explorer', href: '/api-explorer' },
       { title: 'FHIR Endpoints', href: '/api-reference#terminology-lookup' },
       { title: 'Code Translation', href: '/api-reference#code-translation' },
       { title: 'Error Handling', href: '/api-reference#error-handling' },
@@ -273,6 +274,7 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
       <ul role="list">
         <TopLevelNavItem href="/">AyushBridge</TopLevelNavItem>
         <TopLevelNavItem href="/api-reference">API Reference</TopLevelNavItem>
+        <TopLevelNavItem href="/api-explorer">API Explorer</TopLevelNavItem>
         <TopLevelNavItem href="#">Support</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
