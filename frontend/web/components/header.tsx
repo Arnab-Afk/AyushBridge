@@ -13,6 +13,20 @@ export default function Header() {
       {/* Navigation */}
       <nav className="hidden md:flex items-center space-x-8">
         <a
+          href="/"
+          className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
+        >
+          Home
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a
+          href="/insurance"
+          className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
+        >
+          Insurance
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+        </a>
+        <a
           href="#features"
           className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
         >
@@ -31,20 +45,6 @@ export default function Header() {
           className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
         >
           Process
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a
-          href="#testimonials"
-          className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
-        >
-          Testimonials
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
-        </a>
-        <a
-          href="#pricing"
-          className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
-        >
-          Pricing
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
       </nav>

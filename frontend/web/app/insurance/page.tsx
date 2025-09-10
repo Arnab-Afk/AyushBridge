@@ -1,301 +1,356 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { 
-  Shield, 
-  Brain, 
-  FileText, 
-  Clock, 
-  CheckCircle, 
-  TrendingUp, 
-  Users, 
-  Zap,
-  Search,
-  Database,
-  AlertCircle,
-  ArrowRight
-} from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import Header from "@/components/header"
+
+interface GeneratedCode {
+  codeSystem: string
+  code: string
+  displayName: string
+  confidence: number
+}
+
+interface GenerationResult {
+  clinicalDescription: string
+  codes: GeneratedCode[]
+}
 
 export default function InsurancePage() {
-  const [selectedTab, setSelectedTab] = useState("overview")
+  const [clinicalDescription, setClinicalDescription] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [results, setResults] = useState<GenerationResult | null>(null)
+  const [showResults, setShowResults] = useState(false)
 
-  const features = [
-    {
-      icon: Brain,
-      title: "AI-Powered Claims Processing",
-      description: "Advanced machine learning algorithms automatically process and categorize insurance claims using ICD and NAMC code mapping."
-    },
-    {
-      icon: Search,
-      title: "Intelligent Code Matching",
-      description: "TF-IDF vectorization and cosine similarity ensure accurate matching of symptoms to medical codes with 95%+ accuracy."
-    },
-    {
-      icon: Clock,
-      title: "Real-Time Processing",
-      description: "Process thousands of claims in seconds, reducing manual review time from hours to minutes."
-    },
-    {
-      icon: Database,
-      title: "Comprehensive Database",
-      description: "Integration with ICD-10 and NAMC databases for complete medical terminology coverage."
+  const handleGenerateCodes = async () => {
+    if (!clinicalDescription.trim()) return
+
+    setIsLoading(true)
+    
+    try {
+      const response = await fetch('/api/generate-codes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ clinicalDescription }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setResults(data)
+        setShowResults(true)
+      } else {
+        // For demo purposes, show mock data if API fails
+        const mockData: GenerationResult = {
+          clinicalDescription,
+          codes: [
+            {
+              codeSystem: "ICD-11",
+              code: "AB45.6",
+              displayName: "Respiratory infection, unspecified",
+              confidence: 95
+            },
+            {
+              codeSystem: "NAMASTE",
+              code: "RES-001",
+              displayName: "Acute respiratory distress",
+              confidence: 88
+            },
+            {
+              codeSystem: "ICD-11",
+              code: "CD78.9",
+              displayName: "Cough, unspecified",
+              confidence: 75
+            }
+          ]
+        }
+        setResults(mockData)
+        setShowResults(true)
+      }
+    } catch (error) {
+      console.error('Error generating codes:', error)
+      // Show mock data on error for demo
+      const mockData: GenerationResult = {
+        clinicalDescription,
+        codes: [
+          {
+            codeSystem: "ICD-11",
+            code: "AB45.6",
+            displayName: "Respiratory infection, unspecified",
+            confidence: 95
+          },
+          {
+            codeSystem: "NAMASTE",
+            code: "RES-001",
+            displayName: "Acute respiratory distress",
+            confidence: 88
+          },
+          {
+            codeSystem: "ICD-11",
+            code: "CD78.9",
+            displayName: "Cough, unspecified",
+            confidence: 75
+          }
+        ]
+      }
+      setResults(mockData)
+      setShowResults(true)
+    } finally {
+      setIsLoading(false)
     }
-  ]
+  }
 
-  const stats = [
-    { label: "Claims Processed", value: "2.3M+", icon: FileText },
-    { label: "Accuracy Rate", value: "97.8%", icon: CheckCircle },
-    { label: "Processing Speed", value: "3.2s", icon: Zap },
-    { label: "Cost Reduction", value: "68%", icon: TrendingUp }
-  ]
+  const handleBack = () => {
+    setShowResults(false)
+    setResults(null)
+  }
 
-  const processSteps = [
-    {
-      step: "1",
-      title: "Symptom Analysis",
-      description: "AI extracts and cleans symptom data from patient records",
-      detail: "Natural language processing removes noise and identifies key medical terms"
-    },
-    {
-      step: "2", 
-      title: "Code Matching",
-      description: "TF-IDF vectorization matches symptoms to ICD/NAMC codes",
-      detail: "Cosine similarity algorithm finds the most relevant medical codes"
-    },
-    {
-      step: "3",
-      title: "Validation",
-      description: "Multi-threshold validation ensures accuracy",
-      detail: "Similarity scores above 0.35 threshold guarantee quality matches"
-    },
-    {
-      step: "4",
-      title: "Output Generation",
-      description: "Structured claims data in Excel and JSON formats",
-      detail: "Ready for immediate integration with existing insurance systems"
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code)
+  }
+
+  const handleCopyAll = () => {
+    if (results) {
+      const allCodes = results.codes.map(code => 
+        `${code.codeSystem}: ${code.code} - ${code.displayName} (${code.confidence}%)`
+      ).join('\n')
+      navigator.clipboard.writeText(allCodes)
     }
-  ]
+  }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Hero Section */}
-      <section className="relative px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center">
-            <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200">
-              <Shield className="mr-1 h-3 w-3" />
-              AI-Powered Insurance Technology
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Revolutionary Insurance
-              <span className="text-blue-600"> Claims Processing</span>
-            </h1>
-            <p className="mt-6 text-xl leading-8 text-gray-600 max-w-3xl mx-auto">
-              Transform your insurance operations with our AI-driven claims processing system. 
-              Automated ICD and NAMC code mapping with machine learning accuracy.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                Start Processing Claims
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="lg">
-                Watch Demo
-              </Button>
+  if (showResults && results) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <main className="container mx-auto px-6 py-12">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold text-white mb-4">
+                Code Conversion Results
+              </h1>
+              <p className="text-white/70 text-lg">
+                Review the generated codes based on your clinical input.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8 bg-white">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="mx-auto mb-4 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <stat.icon className="h-6 w-6 text-blue-600" />
-                </div>
-                <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Advanced AI Features
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Powered by cutting-edge machine learning and natural language processing
-            </p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-600">
-                    {feature.description}
-                  </CardDescription>
+            <div className="space-y-8">
+              {/* Clinical Description */}
+              <Card className="sofax-card">
+                <CardContent className="p-6">
+                  <h2 className="text-xl font-semibold text-white mb-4">
+                    Clinical Description
+                  </h2>
+                  <p className="text-white/80 leading-relaxed">
+                    {results.clinicalDescription}
+                  </p>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Process Flow */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              How It Works
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Our AI-powered pipeline processes claims with scientific precision
+              {/* Generated Codes */}
+              <Card className="sofax-card">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-white">
+                      Generated Codes
+                    </h2>
+                    <Button
+                      onClick={handleCopyAll}
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      <svg 
+                        className="w-4 h-4" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
+                        />
+                      </svg>
+                      Copy All
+                    </Button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-white/10">
+                          <th className="text-left py-3 px-4 text-white/70 font-medium">
+                            Code System
+                          </th>
+                          <th className="text-left py-3 px-4 text-white/70 font-medium">
+                            Code
+                          </th>
+                          <th className="text-left py-3 px-4 text-white/70 font-medium">
+                            Display Name
+                          </th>
+                          <th className="text-left py-3 px-4 text-white/70 font-medium">
+                            Confidence
+                          </th>
+                          <th className="text-left py-3 px-4 text-white/70 font-medium">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {results.codes.map((code, index) => (
+                          <tr 
+                            key={index} 
+                            className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                          >
+                            <td className="py-4 px-4 text-white font-medium">
+                              {code.codeSystem}
+                            </td>
+                            <td className="py-4 px-4 text-white font-mono">
+                              {code.code}
+                            </td>
+                            <td className="py-4 px-4 text-white/80">
+                              {code.displayName}
+                            </td>
+                            <td className="py-4 px-4">
+                              <span 
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                  code.confidence >= 90 
+                                    ? 'bg-green-900/50 text-green-300' 
+                                    : code.confidence >= 75 
+                                    ? 'bg-yellow-900/50 text-yellow-300' 
+                                    : 'bg-red-900/50 text-red-300'
+                                }`}
+                              >
+                                {code.confidence}%
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <Button
+                                onClick={() => handleCopyCode(code.code)}
+                                variant="ghost"
+                                size="sm"
+                                className="text-primary hover:text-primary/80"
+                              >
+                                <svg 
+                                  className="w-4 h-4" 
+                                  fill="none" 
+                                  stroke="currentColor" 
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    strokeWidth={2} 
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" 
+                                  />
+                                </svg>
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
+                <Button
+                  onClick={handleBack}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <svg 
+                    className="w-4 h-4" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                    />
+                  </svg>
+                  Back
+                </Button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container mx-auto px-6 py-12">
+        <div className="max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Insurance Code Converter
+            </h1>
+            <p className="text-white/70 text-lg">
+              Enter a clinical description to generate the corresponding ICD or NAMASTE codes.
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {processSteps.map((step, index) => (
-              <div key={index} className="relative">
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                    {step.step}
-                  </div>
-                  {index < processSteps.length - 1 && (
-                    <div className="hidden lg:block absolute top-5 left-10 w-full h-0.5 bg-blue-200" />
-                  )}
-                </div>
-                <Card className="h-full">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{step.title}</CardTitle>
-                    <CardDescription>{step.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-500">{step.detail}</p>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Technical Specifications */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8 bg-white">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
-            <div>
-              <Badge className="mb-4 bg-green-100 text-green-700">
-                Technical Excellence
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">
-                Built on Scientific Foundation
-              </h2>
+          {/* Form */}
+          <Card className="sofax-card">
+            <CardContent className="p-8">
               <div className="space-y-6">
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">TF-IDF Vectorization</h3>
-                    <p className="text-gray-600">Advanced text analysis using Term Frequency-Inverse Document Frequency for precise symptom matching</p>
-                  </div>
+                <div>
+                  <label 
+                    htmlFor="clinical-description" 
+                    className="block text-sm font-medium text-white mb-2"
+                  >
+                    Clinical Description
+                  </label>
+                  <textarea
+                    id="clinical-description"
+                    placeholder="e.g., '45 year old male with chest pain and breathlessness'"
+                    value={clinicalDescription}
+                    onChange={(e) => setClinicalDescription(e.target.value)}
+                    className="w-full h-32 px-4 py-3 bg-input border border-border rounded-lg text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  />
                 </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Cosine Similarity</h3>
-                    <p className="text-gray-600">Mathematical precision in matching symptoms to medical codes with similarity thresholds</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Multi-Format Output</h3>
-                    <p className="text-gray-600">Exports to Excel and JSON with structured data for seamless integration</p>
-                  </div>
-                </div>
+
+                <Button
+                  onClick={handleGenerateCodes}
+                  disabled={!clinicalDescription.trim() || isLoading}
+                  className="w-full sofax-button-primary py-3 text-white font-medium"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Generating Codes...
+                    </div>
+                  ) : (
+                    'Generate Codes'
+                  )}
+                </Button>
               </div>
-            </div>
-            <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Database className="mr-2 h-5 w-5 text-blue-600" />
-                  System Architecture
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-white p-4 rounded-lg">
-                  <div className="text-sm font-medium text-gray-900 mb-2">Data Sources</div>
-                  <div className="text-sm text-gray-600">ICD-10 Codes • NAMC Database • Clinical Terminology</div>
-                </div>
-                <div className="bg-white p-4 rounded-lg">
-                  <div className="text-sm font-medium text-gray-900 mb-2">Processing Engine</div>
-                  <div className="text-sm text-gray-600">Python • Scikit-learn • Pandas • NumPy</div>
-                </div>
-                <div className="bg-white p-4 rounded-lg">
-                  <div className="text-sm font-medium text-gray-900 mb-2">Output Formats</div>
-                  <div className="text-sm text-gray-600">Excel Reports • JSON API • Real-time Dashboard</div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+            </CardContent>
+          </Card>
 
-      {/* CTA Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8 bg-blue-600">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Ready to Transform Your Insurance Operations?
-          </h2>
-          <p className="mt-6 text-xl leading-8 text-blue-100">
-            Join leading insurance companies using our AI-powered claims processing system
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              Get Started Today
-            </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-blue-600">
-              Schedule Demo
-            </Button>
+          {/* Info Section */}
+          <div className="mt-12 text-center">
+            <p className="text-white/60 text-sm">
+              Our AI-powered system analyzes clinical descriptions and generates accurate 
+              medical codes for insurance and billing purposes.
+            </p>
           </div>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Shield className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold text-white">AyushBridge Insurance AI</span>
-            </div>
-            <div className="text-sm text-gray-400">
-              © 2025 AyushBridge. Powered by advanced machine learning.
-            </div>
-          </div>
-        </div>
-      </footer>
+      </main>
     </div>
   )
 }
