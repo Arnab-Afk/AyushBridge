@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
 import { PaperAirplaneIcon } from '@/components/icons/PaperAirplaneIcon'
 import { SendIcon } from '@/components/icons/SendIcon'
@@ -40,6 +40,23 @@ export function ChatWidget() {
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const loadStats = useCallback(async () => {
+    try {
+      const response = await fetch('/api/chatbot/stats')
+      const data = await response.json()
+
+      if (data.success) {
+        setStats({
+          status: data.stats.is_initialized ? 'Online' : 'Offline',
+          message_count: messages.length,
+          chunk_count: data.stats.total_chunks || 0,
+        })
+      }
+    } catch (error) {
+      setStats((prev) => ({ ...prev, status: 'Offline' }))
+    }
+  }, [messages.length])
+
   // Initialize and handle chat open/close
   useEffect(() => {
     if (isOpen) {
@@ -70,7 +87,7 @@ export function ChatWidget() {
     
     window.addEventListener('keydown', handleKeydown)
     return () => window.removeEventListener('keydown', handleKeydown)
-  }, [isOpen])
+  }, [isOpen, messages.length, loadStats])
 
   useEffect(() => {
     // Ensure scrolling happens after DOM updates
@@ -126,8 +143,8 @@ export function ChatWidget() {
     ])
 
     try {
-      // Call the Flask server directly
-      const response = await fetch('http://localhost:5001/api/chat', {
+      // Call the chatbot API through Next.js API route
+      const response = await fetch('/api/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +220,7 @@ export function ChatWidget() {
 
   const loadSuggestions = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/suggestions')
+      const response = await fetch('/api/chatbot/suggestions')
       const data = await response.json()
 
       if (data.success && data.suggestions) {
@@ -214,26 +231,9 @@ export function ChatWidget() {
     }
   }
 
-  const loadStats = async () => {
-    try {
-      const response = await fetch('http://localhost:5001/api/stats')
-      const data = await response.json()
-
-      if (data.success) {
-        setStats({
-          status: data.stats.is_initialized ? 'Online' : 'Offline',
-          message_count: messages.length,
-          chunk_count: data.stats.total_chunks || 0,
-        })
-      }
-    } catch (error) {
-      setStats((prev) => ({ ...prev, status: 'Offline' }))
-    }
-  }
-
   const resetConversation = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/reset', { method: 'POST' })
+      const response = await fetch('/api/chatbot/reset', { method: 'POST' })
       const data = await response.json()
 
       if (data.success) {

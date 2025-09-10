@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const CHATBOT_API_URL = process.env.CHATBOT_API_URL || 'http://localhost:5000'
 
+export const runtime = 'edge'
+
 export async function GET() {
   try {
     const response = await fetch(`${CHATBOT_API_URL}/api/stats`, {
