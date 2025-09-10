@@ -4,23 +4,12 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Header from "@/components/header"
-
-interface GeneratedCode {
-  codeSystem: string
-  code: string
-  displayName: string
-  confidence: number
-}
-
-interface GenerationResult {
-  clinicalDescription: string
-  codes: GeneratedCode[]
-}
+import { GeneratedCode, GenerationResponse } from "@/lib/protocol"
 
 export default function InsurancePage() {
   const [clinicalDescription, setClinicalDescription] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [results, setResults] = useState<GenerationResult | null>(null)
+  const [results, setResults] = useState<GenerationResponse | null>(null)
   const [showResults, setShowResults] = useState(false)
 
   const handleGenerateCodes = async () => {
@@ -29,21 +18,36 @@ export default function InsurancePage() {
     setIsLoading(true)
     
     try {
-      const response = await fetch('/api/generate-codes', {
+      const response = await fetch('http://localhost:3000/fhir/symptom-search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify({ clinicalDescription }),
+        body: JSON.stringify({ description: clinicalDescription }),
       })
 
       if (response.ok) {
         const data = await response.json()
-        setResults(data)
+        
+        // Transform FHIR Bundle response to expected format
+        const codes = data.entry?.map((entry: any) => ({
+          codeSystem: entry.resource.codeSystem || 'Unknown',
+          code: entry.resource.code,
+          displayName: entry.resource.display || 'Unknown',
+          confidence: Math.round((entry.resource._score || 0.5) * 100)
+        })) || []
+
+        const transformedData = {
+          clinicalDescription,
+          codes
+        }
+        
+        setResults(transformedData)
         setShowResults(true)
       } else {
         // For demo purposes, show mock data if API fails
-        const mockData: GenerationResult = {
+        const mockData: GenerationResponse = {
           clinicalDescription,
           codes: [
             {
@@ -72,7 +76,7 @@ export default function InsurancePage() {
     } catch (error) {
       console.error('Error generating codes:', error)
       // Show mock data on error for demo
-      const mockData: GenerationResult = {
+      const mockData: GenerationResponse = {
         clinicalDescription,
         codes: [
           {
@@ -113,7 +117,7 @@ export default function InsurancePage() {
 
   const handleCopyAll = () => {
     if (results) {
-      const allCodes = results.codes.map(code => 
+      const allCodes = results.codes.map((code: GeneratedCode) => 
         `${code.codeSystem}: ${code.code} - ${code.displayName} (${code.confidence}%)`
       ).join('\n')
       navigator.clipboard.writeText(allCodes)
@@ -201,7 +205,7 @@ export default function InsurancePage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {results.codes.map((code, index) => (
+                        {results.codes.map((code: GeneratedCode, index: number) => (
                           <tr 
                             key={index} 
                             className="border-b border-white/5 hover:bg-white/5 transition-colors"

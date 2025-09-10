@@ -15,6 +15,7 @@ const bundleRoutes = require('./routes/bundle');
 const encounterRoutes = require('./routes/encounter');
 const terminologyRoutes = require('./routes/terminology');
 const problemListRoutes = require('./routes/problemList');
+const symptomSearchRoutes = require('./routes/symptomSearch');
 const { router: auditRoutes } = require('./routes/audit');
 
 // Import middleware
@@ -156,6 +157,18 @@ app.get('/fhir/metadata', (req, res) => {
             { name: 'date', type: 'date' }
           ]
         },
+        {
+          type: 'Operation',
+          interaction: [
+            { code: 'operation' }
+          ],
+          operation: [
+            {
+              name: 'symptom-search',
+              definition: 'http://localhost:3000/fhir/OperationDefinition/symptom-search'
+            }
+          ]
+        },
       ]
     }]
   });
@@ -171,6 +184,7 @@ app.use('/fhir/Bundle', bundleRoutes);
 app.use('/fhir/Encounter', encounterRoutes);
 app.use('/fhir/terminology', terminologyRoutes);
 app.use('/fhir/problem-list', problemListRoutes);
+app.use('/fhir/symptom-search', symptomSearchRoutes);
 app.use('/fhir/AuditEvent', auditRoutes);
 
 // Error handling middleware (must be last)

@@ -1028,6 +1028,144 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+---
+
+## 🔍 Fuzzy Search Implementation
+
+### Overview
+AyushBridge now includes a high-performance fuzzy search implementation using PostgreSQL database with trigram similarity matching, replacing the previous in-memory TF-IDF approach.
+
+### Key Benefits
+- **Scalability**: Handle millions of records without memory constraints
+- **Performance**: Database-optimized fuzzy search with GIN indexes
+- **Persistence**: Data stored permanently in relational database
+- **Concurrency**: Support for multiple simultaneous users
+- **Advanced Matching**: Trigram-based similarity scoring
+
+### Setup Instructions
+
+#### 1. Install Dependencies
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install required packages
+python3 -m pip install psycopg2-binary pandas openpyxl
+```
+
+#### 2. Database Configuration
+Update credentials in both `setup_db.py` and `test.py`:
+```python
+DB_CONFIG = {
+    'host': 'localhost',
+    'database': 'ayushbridge',
+    'user': 'your_username',
+    'password': 'your_password',
+    'port': 5432
+}
+```
+
+#### 3. Initialize Database
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run database setup
+python3 setup_db.py
+```
+
+This creates:
+- `ayushbridge` database
+- `icd_codes` and `namc_codes` tables
+- GIN indexes for fuzzy search
+- Loads data from Excel files
+
+#### 4. Run Fuzzy Search
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run the test script
+python3 test.py
+```
+
+### Database Schema
+```sql
+-- ICD Codes Table
+CREATE TABLE icd_codes (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(20) UNIQUE NOT NULL,
+    title TEXT NOT NULL
+);
+
+-- NAMC Codes Table
+CREATE TABLE namc_codes (
+    id SERIAL PRIMARY KEY,
+    namc_code VARCHAR(20) UNIQUE NOT NULL,
+    definition TEXT NOT NULL
+);
+
+-- Fuzzy Search Indexes
+CREATE INDEX idx_icd_title_gin ON icd_codes USING gin (title gin_trgm_ops);
+CREATE INDEX idx_namc_definition_gin ON namc_codes USING gin (definition gin_trgm_ops);
+```
+
+### Fuzzy Search Query
+```sql
+-- Using PostgreSQL's similarity function
+SELECT code, title, similarity(title, 'chest pain') as score
+FROM icd_codes
+WHERE similarity(title, 'chest pain') > 0.35
+ORDER BY score DESC
+LIMIT 3;
+```
+
+### Configuration Options
+```python
+SIMILARITY_THRESHOLD = 0.35  # Adjust for stricter/looser matching
+TOP_K = 3                     # Number of matches to return
+```
+
+### Fallback Mode
+If `pg_trgm` extension is unavailable, automatically falls back to ILIKE pattern matching.
+
+### Performance Comparison
+
+| Aspect | TF-IDF (Previous) | Database Fuzzy Search (Current) |
+|--------|------------------|----------------------------------|
+| Memory Usage | High (loads all data) | Low (database handles storage) |
+| Scalability | Limited by RAM | Scales to millions of records |
+| Persistence | None | Permanent database storage |
+| Concurrent Users | Limited | Full support |
+| Setup Time | Fast | Initial database setup required |
+| Search Speed | Fast | Optimized with indexes |
+
+### Usage Example
+```python
+from test import map_codes
+
+# Search for symptoms
+icd_matches, namc_matches = map_codes("45 year old male with chest pain")
+
+print("Top ICD Matches:")
+for match in icd_matches:
+    print(f"{match['ICD_Code']}: {match['ICD_Title']} (score: {match['ICD_Score']:.3f})")
+
+print("Top NAMC Matches:")
+for match in namc_matches:
+    print(f"{match['NAMC_Code']}: {match['NAMC_Definition'][:50]}... (score: {match['NAMC_Score']:.3f})")
+```
+
+### Troubleshooting
+- **PostgreSQL Connection**: Ensure PostgreSQL is running and credentials are correct
+- **Extension Missing**: Install `pg_trgm` manually if needed
+- **Excel Files**: Ensure `final.xlsx` and `combined_definitions.xlsx` exist in backend directory
+
+---
+
 <div align="center">
   <strong>Built with ❤️ for India's Digital Health Transformation</strong>
   <br>

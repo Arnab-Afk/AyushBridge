@@ -1,20 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-interface GeneratedCode {
-  codeSystem: string
-  code: string
-  displayName: string
-  confidence: number
-}
-
-interface GenerationRequest {
-  clinicalDescription: string
-}
-
-interface GenerationResponse {
-  clinicalDescription: string
-  codes: GeneratedCode[]
-}
+import { GeneratedCode, GenerationRequest, GenerationResponse } from '@/lib/protocol'
 
 // Mock code generation function - replace with actual AI/ML service
 function generateMockCodes(description: string): GeneratedCode[] {

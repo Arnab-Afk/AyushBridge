@@ -27,24 +27,24 @@ export default function Header() {
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a
-          href="#features"
+          href="/bundles"
           className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
         >
-          Features
+          Bundles
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a
-          href="#benefits"
+          href="/playground"
           className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
         >
-          Solutions
+          Playground
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a
-          href="#how-it-works"
+          href="/terminology"
           className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
         >
-          Process
+          Terminology
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
       </nav>
