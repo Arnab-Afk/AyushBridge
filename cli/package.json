@@ -1,0 +1,51 @@
+{
+  "name": "ayushbridge-cli",
+  "version": "1.0.0",
+  "description": "Command Line Interface for AyushBridge FHIR Backend",
+  "main": "index.js",
+  "bin": {
+    "ayush": "./bin/ayush.js",
+    "ayushbridge": "./bin/ayush.js"
+  },
+  "scripts": {
+    "start": "node bin/ayush.js",
+    "dev": "nodemon bin/ayush.js",
+    "test": "jest",
+    "test-cli": "node scripts/test.js",
+    "setup": "node scripts/setup.js",
+    "demo": "node scripts/demo.js",
+    "build": "pkg . --out-path dist/",
+    "install-global": "npm install -g ."
+  },
+  "keywords": [
+    "cli",
+    "fhir",
+    "healthcare",
+    "ayushbridge",
+    "namaste",
+    "icd11",
+    "terminology"
+  ],
+  "author": "AyushBridge Team",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "axios": "^1.11.0",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.6",
+    "cli-table3": "^0.6.3",
+    "ora": "^5.4.1",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.1.1",
+    "node-fetch": "^2.7.0",
+    "joi": "^17.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "jest": "^29.7.0",
+    "pkg": "^5.8.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
