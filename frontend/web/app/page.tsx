@@ -2,24 +2,42 @@
 
 import Header from "@/components/header"
 import HeroContent from "@/components/hero-content"
-import ShaderBackground from "@/components/shader-background"
+import SofaxBackground from "@/components/sofax-background"
 import Features from "@/components/sections/features"
 import Benefits from "@/components/sections/benefits"
 import HowItWorks from "@/components/sections/how-it-works"
+import Testimonials from "@/components/sections/testimonials"
+import Pricing from "@/components/sections/pricing"
+import Footer from "@/components/sections/footer"
 
-export default function ShaderShowcase() {
+export default function SofaxShowcase() {
   return (
     <div>
-      {/* Hero Section with Shader Background */}
-      <ShaderBackground>
+      {/* Hero Section with Sofax Background */}
+      <SofaxBackground>
         <Header />
         <HeroContent />
-      </ShaderBackground>
+      </SofaxBackground>
       
       {/* Content Sections */}
-      <Features />
-      <Benefits />
-      <HowItWorks />
+      <div id="features">
+        <Features />
+      </div>
+      <div id="benefits">
+        <Benefits />
+      </div>
+      <div id="how-it-works">
+        <HowItWorks />
+      </div>
+      <div id="testimonials">
+        <Testimonials />
+      </div>
+      <div id="pricing">
+        <Pricing />
+      </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

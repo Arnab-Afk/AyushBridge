@@ -5,9 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:chatbot": "./run-with-chatbot.sh",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup:chatbot": "cd AyushBridge_Chatbot && python setup_chatbot.py"
   },
   "keywords": [
     "FHIR",

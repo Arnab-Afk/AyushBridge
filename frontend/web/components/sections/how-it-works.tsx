@@ -1,8 +1,5 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-
 const steps = [
   {
     step: "01",
@@ -14,7 +11,11 @@ const steps = [
       "Set up environment variables",
       "Initialize database and import NAMASTE terms"
     ],
-    icon: "🔐"
+    icon: (
+      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+      </svg>
+    )
   },
   {
     step: "02", 
@@ -26,7 +27,11 @@ const steps = [
       "Configure FHIR Bundle uploads",
       "Set up real-time synchronization"
     ],
-    icon: "🔗"
+    icon: (
+      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+    )
   },
   {
     step: "03",
@@ -38,7 +43,11 @@ const steps = [
       "Create dual-coded conditions",
       "Generate insurance-ready claims"
     ],
-    icon: "🔄"
+    icon: (
+      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+      </svg>
+    )
   },
   {
     step: "04",
@@ -50,7 +59,11 @@ const steps = [
       "Review translation confidence scores", 
       "Generate compliance reports"
     ],
-    icon: "📊"
+    icon: (
+      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+    )
   }
 ]
 
@@ -64,95 +77,127 @@ const workflow = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto px-6">
+    <section className="py-24 relative">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0F0F23] to-[#1A1A2E]" />
+      
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4 border-gray-200 text-gray-600">
-            ⚙️ How It Works
-          </Badge>
-          <h2 className="text-4xl font-bold mb-6 text-gray-900">
-            Simple <span className="text-indigo-600">4-Step Integration</span>
+          <div className="inline-flex items-center px-4 py-2 rounded-full sofax-glass mb-6">
+            <span className="text-purple-400 text-sm font-medium">⚙️</span>
+            <span className="text-white/90 text-sm font-medium ml-2">Integration Process</span>
+          </div>
+          <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            Simple
+            <br />
+            <span className="sofax-text-gradient">4-Step Integration</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Get up and running with AyushBridge in minutes, not months. Our streamlined process ensures quick deployment and immediate value.
+          <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
+            Deploy AyushBridge in minutes with our streamlined integration process
           </p>
         </div>
 
         {/* Implementation Steps */}
-        <div className="mb-16">
-          <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        <div className="mb-24">
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {steps.map((step, index) => (
-              <Card key={index} className="group border border-gray-200 bg-white hover:shadow-lg transition-all duration-300 rounded-lg">
-                <div className="absolute top-4 right-4">
-                  <Badge variant="default" className="text-sm px-3 py-1 bg-indigo-600 text-white">
-                    {step.step}
-                  </Badge>
-                </div>
-                <CardHeader className="pb-4">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <span className="text-2xl">{step.icon}</span>
-                    <CardTitle className="text-lg text-gray-900">{step.title}</CardTitle>
+              <div key={index} className="group relative">
+                {/* Connection line for desktop */}
+                {index < steps.length - 1 && index % 2 === 0 && (
+                  <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-transparent z-10" />
+                )}
+                
+                <div className="sofax-card p-8 rounded-2xl hover:transform hover:scale-105 transition-all duration-500 h-full relative overflow-hidden">
+                  {/* Background decoration */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -translate-y-8 translate-x-8" />
+                  
+                  <div className="flex items-start justify-between mb-6 relative z-10">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 sofax-gradient rounded-xl flex items-center justify-center">
+                        {step.icon}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">{step.title}</h3>
+                        <p className="text-white/70 mt-1">{step.description}</p>
+                      </div>
+                    </div>
+                    <div className="px-4 py-2 sofax-glass text-purple-400 font-bold rounded-full border border-purple-500/20">
+                      {step.step}
+                    </div>
                   </div>
-                  <CardDescription className="text-gray-600">
-                    {step.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
+                  
+                  <ul className="space-y-3 relative z-10">
                     {step.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-gray-600">
-                        <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full mr-3 flex-shrink-0"></span>
+                      <li key={idx} className="flex items-center text-white/80">
+                        <span className="w-2 h-2 bg-purple-400 rounded-full mr-3 flex-shrink-0"></span>
                         {detail}
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
 
         {/* Workflow Diagram */}
-        <div>
-          <h3 className="text-2xl font-semibold text-center mb-8 text-gray-900">Clinical Workflow</h3>
-          <Card className="max-w-4xl mx-auto border border-gray-200 bg-white rounded-lg">
-            <CardHeader>
-              <CardTitle className="text-center text-gray-900">From Traditional Terms to Standardized Codes</CardTitle>
-              <CardDescription className="text-center text-gray-600">
-                Seamless workflow for dual-coding traditional medicine conditions
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+        <div className="max-w-5xl mx-auto">
+          <h3 className="text-3xl font-bold text-center mb-12 text-white">Clinical Workflow</h3>
+          <div className="sofax-card rounded-2xl p-8 relative overflow-hidden">
+            {/* Background decorations */}
+            <div className="absolute top-0 left-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl -translate-x-8 -translate-y-8" />
+            <div className="absolute bottom-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl translate-x-8 translate-y-8" />
+            
+            <div className="relative z-10">
+              <div className="text-center mb-8">
+                <h4 className="text-2xl font-bold text-white mb-2">From Traditional Terms to Standardized Codes</h4>
+                <p className="text-white/70 text-lg">
+                  Seamless workflow for dual-coding traditional medicine conditions
+                </p>
+              </div>
+              
+              <div className="space-y-6">
                 {workflow.map((flow, index) => (
-                  <div key={index} className="flex items-center space-x-4">
-                    <div className="flex-shrink-0">
-                      <Badge variant="secondary" className="text-xs px-2 py-1 bg-gray-100 text-gray-700">
-                        {index + 1}
-                      </Badge>
-                    </div>
-                    <div className="flex-1 bg-gray-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm text-gray-900">{flow.from}</span>
-                        <span className="text-gray-400">→</span>
-                        <span className="font-medium text-sm text-gray-900">{flow.to}</span>
+                  <div key={index} className="relative">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 sofax-gradient text-white font-bold rounded-full flex items-center justify-center">
+                          {index + 1}
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-600 mt-2">{flow.description}</p>
+                      <div className="flex-1 sofax-glass rounded-xl p-6 border border-purple-500/20">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-bold text-white">{flow.from}</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-8 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600"></div>
+                            <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                          <span className="font-bold text-white">{flow.to}</span>
+                        </div>
+                        <p className="text-white/70">{flow.description}</p>
+                      </div>
                     </div>
+                    
+                    {/* Connection line */}
+                    {index < workflow.length - 1 && (
+                      <div className="absolute left-5 top-10 w-0.5 h-6 bg-gradient-to-b from-purple-500 to-transparent"></div>
+                    )}
                   </div>
                 ))}
               </div>
               
-              <div className="mt-8 text-center">
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h4 className="font-semibold text-sm mb-2 text-gray-900">Result: Complete Dual-Coded Medical Record</h4>
-                  <p className="text-xs text-gray-600 leading-relaxed">
+              <div className="mt-8">
+                <div className="sofax-gradient rounded-xl p-6 text-white text-center">
+                  <h4 className="font-bold text-lg mb-2">Result: Complete Dual-Coded Medical Record</h4>
+                  <p className="text-white/90 leading-relaxed">
                     FHIR Condition resource with NAMASTE traditional terms + ICD-11 standardized codes + audit trails
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </section>

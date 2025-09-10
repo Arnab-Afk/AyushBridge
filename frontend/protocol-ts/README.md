@@ -1,10 +1,10 @@
-# Protocol
+# AyushBridge Documentation Site
 
-Protocol is a [Tailwind UI](https://tailwindui.com) site template built using [Tailwind CSS](https://tailwindcss.com) and [Next.js](https://nextjs.org).
+Documentation site for the AyushBridge FHIR R4-compliant terminology microservice for NAMASTE & ICD-11 TM2 integration, built using Next.js and Tailwind CSS.
 
-## Getting started
+## Getting Started
 
-To get started with this template, first install the npm dependencies:
+To get started with this site, first install the npm dependencies:
 
 ```bash
 npm install
@@ -17,6 +17,31 @@ npm run dev
 ```
 
 Finally, open [http://localhost:3000](http://localhost:3000) in your browser to view the website.
+
+## AI Chatbot Integration
+
+This documentation site includes an integrated AI chatbot that can answer questions about AyushBridge. The chatbot uses RAG (Retrieval Augmented Generation) technology with a FAISS vector database to provide accurate answers from the documentation.
+
+### Setting Up the Chatbot
+
+1. **Install Python Dependencies**
+   ```bash
+   npm run setup:chatbot
+   ```
+   This will install all required Python packages and set up the vector database.
+
+2. **Configure OpenRouter API Key**
+   - Create a copy of the example environment file:
+     ```bash
+     cp AyushBridge_Chatbot/.env_chatbot.example AyushBridge_Chatbot/.env_chatbot
+     ```
+   - Edit the `.env_chatbot` file and add your OpenRouter API key
+
+3. **Run with Chatbot Enabled**
+   ```bash
+   npm run dev:chatbot
+   ```
+   This script starts both the Next.js server and the Python chatbot server.
 
 ## Customizing
 

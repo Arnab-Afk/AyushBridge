@@ -4,6 +4,7 @@ import glob from 'fast-glob'
 import { Providers } from '@/app/providers'
 import { Layout } from '@/components/Layout'
 import { type Section } from '@/components/SectionProvider'
+import { ChatWidget } from '@/components/ChatWidget'
 
 import '@/styles/tailwind.css'
 
@@ -35,6 +36,7 @@ export default async function RootLayout({
         <Providers>
           <div className="w-full">
             <Layout allSections={allSections}>{children}</Layout>
+            <ChatWidget />
           </div>
         </Providers>
       </body>
