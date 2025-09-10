@@ -21,8 +21,8 @@ const instrumentSerif = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "AyushBridge - Bridging Traditional Medicine with Modern Healthcare",
+  description: "FHIR R4-compliant terminology microservice connecting traditional Indian medicine with modern healthcare standards.",
   generator: "v0.app",
 }
 

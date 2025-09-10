@@ -144,7 +144,7 @@ export function ChatWidget() {
 
     try {
       // Call the chatbot API through Next.js API route
-      const response = await fetch('https://ayushbridge-simple-chatbot-flg8.onrender.com/api/chat', {
+      const response = await fetch('http://localhost:5001/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

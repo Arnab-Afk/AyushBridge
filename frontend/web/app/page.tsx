@@ -6,6 +6,7 @@ import SofaxBackground from "@/components/sofax-background"
 import Features from "@/components/sections/features"
 import Benefits from "@/components/sections/benefits"
 import HowItWorks from "@/components/sections/how-it-works"
+import ToolsShowcase from "@/components/sections/tools-showcase"
 import Testimonials from "@/components/sections/testimonials"
 import Pricing from "@/components/sections/pricing"
 import Footer from "@/components/sections/footer"
@@ -22,6 +23,9 @@ export default function SofaxShowcase() {
       {/* Content Sections */}
       <div id="features">
         <Features />
+      </div>
+      <div id="tools">
+        <ToolsShowcase />
       </div>
       <div id="benefits">
         <Benefits />

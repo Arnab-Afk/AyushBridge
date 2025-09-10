@@ -41,10 +41,10 @@ export default function Header() {
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
         <a
-          href="/terminology"
+          href="/terminology-explorer"
           className="text-white/80 hover:text-white text-sm font-medium transition-all duration-300 relative group"
         >
-          Terminology
+          Terminology Explorer
           <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </a>
       </nav>

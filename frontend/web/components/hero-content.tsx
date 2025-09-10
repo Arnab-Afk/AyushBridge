@@ -33,12 +33,12 @@ export default function HeroContent() {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <button className="sofax-button-primary px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:shadow-xl">
-              Get Started Free
-            </button>
-            <button className="px-8 py-4 rounded-full bg-transparent border-2 border-white/20 text-white font-semibold text-lg transition-all duration-300 hover:border-white/40 hover:bg-white/5">
-              View Documentation
-            </button>
+            <a href="/terminology-explorer" className="sofax-button-primary px-8 py-4 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:shadow-xl">
+              Try Terminology Explorer
+            </a>
+            <a href="/playground" className="px-8 py-4 rounded-full bg-transparent border-2 border-white/20 text-white font-semibold text-lg transition-all duration-300 hover:border-white/40 hover:bg-white/5">
+              API Playground
+            </a>
           </div>
 
           {/* Stats */}
