@@ -1,0 +1,130 @@
+import { Button } from '@/components/Button'
+
+export const metadata = {
+  title: 'FHIR Models - AyushBridge',
+  description: 'Comprehensive guide to FHIR R4 resources and models used in AyushBridge for healthcare terminology and interoperability.',
+}
+
+export const sections = [
+  { title: 'Overview', id: 'overview' },
+  { title: 'Core Resources', id: 'core-resources' },
+  { title: 'Terminology Resources', id: 'terminology-resources' },
+  { title: 'Clinical Resources', id: 'clinical-resources' },
+  { title: 'Infrastructure Resources', id: 'infrastructure-resources' },
+]
+
+# FHIR Models
+
+## Overview {{ anchor: false, id: 'overview' }}
+
+AyushBridge implements FHIR R4 (Fast Healthcare Interoperability Resources) standard for healthcare data exchange and terminology services. FHIR defines a set of modular components called "resources" that can be assembled into working systems. This page provides an overview of the key FHIR resources supported by AyushBridge. {{ className: 'lead' }}
+
+## Core Resources {{ anchor: false, id: 'core-resources' }}
+
+### Patient
+The Patient resource represents a human patient actor and administrative details about that patient. In AyushBridge, Patient resources are used to identify individuals receiving traditional medicine care.
+
+**Key Properties:**
+- Demographics (name, gender, birth date)
+- Contact information
+- Identifiers (ABHA ID, medical record numbers)
+- Managing organization
+
+### Condition
+Represents a clinical condition, problem, diagnosis, or other event, situation, issue, or clinical concept that has risen to a level of concern. Used for documenting traditional medicine diagnoses and NAMASTE-coded conditions.
+
+**Key Properties:**
+- Clinical status
+- Verification status
+- Category (problem-list-item, encounter-diagnosis)
+- Code (NAMASTE or ICD-11 TM2 codes)
+- Subject (Patient reference)
+
+## Terminology Resources {{ anchor: false, id: 'terminology-resources' }}
+
+### CodeSystem
+Defines a set of codes with meanings. AyushBridge supports multiple code systems including NAMASTE, ICD-11 TM2, and WHO Standardized International Terminologies for Ayurveda.
+
+**Supported Code Systems:**
+- **NAMASTE**: National AYUSH Morbidity & Standardized Terminologies Electronic
+- **ICD-11 TM2**: WHO ICD-11 Traditional Medicine Module 2
+- **WHO Ayurveda**: International standardized Ayurvedic terminology
+
+**Key Operations:**
+- `$lookup`: Get details of a code
+- `$validate-code`: Validate if a code exists in the system
+- `$subsumes`: Check code relationships
+
+### ValueSet
+A set of codes drawn from one or more code systems. Used to define the set of valid codes for specific use cases in traditional medicine documentation.
+
+**Key Properties:**
+- URL identifier
+- Version information
+- Included code systems
+- Expansion capabilities
+
+### ConceptMap
+Defines mappings between concepts defined in different code systems. Essential for translating between NAMASTE, ICD-11 TM2, and biomedical terminologies.
+
+**Mapping Types:**
+- NAMASTE → ICD-11 TM2
+- ICD-11 TM2 → Biomedical codes
+- Bidirectional mappings with confidence scores
+
+**Key Operations:**
+- `$translate`: Convert codes between systems
+- `$closure`: Find related concepts
+
+## Clinical Resources {{ anchor: false, id: 'clinical-resources' }}
+
+### Observation
+Measurements and simple assertions made about a patient. Used for documenting traditional medicine assessments and vital signs.
+
+**Key Properties:**
+- Status
+- Category
+- Code
+- Subject (Patient)
+- Value (quantity, codeable concept, etc.)
+- Effective date/time
+
+### Procedure
+An action that is performed on or for a patient as part of the provision of care. Documents traditional medicine treatments and interventions.
+
+**Key Properties:**
+- Status
+- Code (treatment procedure)
+- Subject (Patient)
+- Performed date/time
+- Performer
+
+## Infrastructure Resources {{ anchor: false, id: 'infrastructure-resources' }}
+
+### Bundle
+A container for a collection of resources. Used for batch operations, transaction bundles, and search result sets.
+
+**Bundle Types:**
+- `transaction`: Atomic operations
+- `batch`: Independent operations
+- `searchset`: Search results
+- `history`: Version history
+
+### CapabilityStatement
+Defines the capabilities of a FHIR server. Describes supported resources, operations, and conformance to FHIR standards.
+
+### AuditEvent
+Record of an event relevant for auditing purposes. Tracks all operations for compliance and security monitoring.
+
+**Key Properties:**
+- Event type
+- Timestamp
+- Agent (who performed the action)
+- Entity (what was accessed)
+- Outcome
+
+<div className="not-prose">
+  <Button href="/api-reference" variant="text" arrow="right">
+    <>View API Reference</>
+  </Button>
+</div>

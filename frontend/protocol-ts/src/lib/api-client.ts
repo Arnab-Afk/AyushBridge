@@ -15,6 +15,7 @@ export async function checkApiHealth(baseUrl = DEFAULT_API_URL): Promise<boolean
       method: 'GET',
       headers: { 'Accept': 'application/json' },
       mode: 'cors',
+      credentials: 'omit', // Don't send credentials with wildcard CORS
     });
     return response.ok;
   } catch (error) {
@@ -31,6 +32,7 @@ export async function getCapabilityStatement(baseUrl = DEFAULT_API_URL) {
     const response = await fetch(`${baseUrl}/fhir/metadata`, {
       headers: { 'Accept': 'application/fhir+json' },
       mode: 'cors',
+      credentials: 'omit', // Don't send credentials with wildcard CORS
     });
     
     if (response.ok) {
@@ -70,6 +72,7 @@ export async function apiRequest<T = any>(
       ...options,
       headers,
       mode: 'cors',
+      credentials: 'omit', // Don't send credentials with wildcard CORS
     });
     
     let data = null;

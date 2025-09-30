@@ -244,6 +244,7 @@ export const navigation: Array<NavGroup> = [
     links: [
       { title: 'API Overview', href: '/api-reference' },
       { title: 'API Explorer', href: '/api-explorer' },
+      { title: 'FHIR Models', href: '/models' },
       { title: 'FHIR Endpoints', href: '/api-reference#terminology-lookup' },
       { title: 'Code Translation', href: '/api-reference#code-translation' },
       { title: 'Error Handling', href: '/api-reference#error-handling' },

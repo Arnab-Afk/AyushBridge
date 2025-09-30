@@ -261,7 +261,7 @@ export default function ApiExplorerPage() {
         body,
         // Add these options to handle CORS properly
         mode: 'cors',
-        credentials: 'include',
+        credentials: 'omit', // Changed from 'include' to 'omit' to work with '*' origin
       })
 
       const endTime = new Date().getTime()
@@ -577,9 +577,9 @@ export default function ApiExplorerPage() {
         )}
 
         {/* Send Request */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-gradient-to-r from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800 p-4 rounded-lg border border-zinc-200 dark:border-zinc-700">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-gradient-to-r from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800 p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 p-2">
           <div className="flex items-center">
-            <span className="mr-3 font-medium text-zinc-700 dark:text-zinc-300">Ready to test?</span>
+            <span className="mr-3 font-medium text-zinc-700 dark:text-zinc-300 p-2">Ready to test?</span>
             <Button 
               onClick={sendRequest} 
               disabled={loading}

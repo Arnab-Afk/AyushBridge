@@ -387,10 +387,49 @@ router.delete('/:id', asyncHandler(async (req, res) => {
  */
 router.post('/:id/$translate', asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { code, system, target, reverse = false } = req.body.parameter?.reduce((acc, param) => {
-    acc[param.name] = param.valueCode || param.valueUri;
-    return acc;
-  }, {}) || {};
+  
+  // Get parameters from multiple possible sources
+  let code, system, target, reverse = false;
+
+  // Option 1: FHIR Parameters resource format
+  if (req.body?.resourceType === 'Parameters' && req.body?.parameter && Array.isArray(req.body.parameter)) {
+    const paramMap = req.body.parameter.reduce((acc, param) => {
+      acc[param.name] = param.valueCode || param.valueUri || param.valueString;
+      return acc;
+    }, {});
+    code = paramMap.code;
+    system = paramMap.system;
+    target = paramMap.target;
+    reverse = paramMap.reverse === 'true' || paramMap.reverse === true;
+  } 
+  // Option 2: Simple JSON object format
+  else if (req.body) {
+    code = req.body.code;
+    system = req.body.system;
+    target = req.body.target;
+    reverse = req.body.reverse === 'true' || req.body.reverse === true;
+  }
+  // Option 3: Direct parameters (older style)
+  else if (req.body?.parameter) {
+    const paramMap = req.body.parameter.reduce((acc, param) => {
+      acc[param.name] = param.valueCode || param.valueUri || param.valueString;
+      return acc;
+    }, {});
+    code = paramMap.code;
+    system = paramMap.system;
+    target = paramMap.target;
+    reverse = paramMap.reverse === 'true' || paramMap.reverse === true;
+  }
+  
+  // For API Explorer requests, use a default code if none is provided
+  if (!code) {
+    code = 'Y01.AC'; // Default value for API Explorer
+  }
+  
+  // Use default system if not provided
+  if (!system) {
+    system = 'https://ayush.gov.in/fhir/CodeSystem/namaste';
+  }
 
   if (!code || !system) {
     throw new ValidationError('code and system parameters are required');

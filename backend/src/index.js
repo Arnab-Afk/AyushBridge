@@ -17,10 +17,13 @@ const terminologyRoutes = require('./routes/terminology');
 const problemListRoutes = require('./routes/problemList');
 const symptomSearchRoutes = require('./routes/symptomSearch');
 const { router: auditRoutes } = require('./routes/audit');
+const { namasteRoutes } = require('./routes/specificCodeSystems');
+const { translationRoutes } = require('./routes/translation');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
 const { requestLogger } = require('./middleware/requestLogger');
+const { corsMiddleware } = require('./middleware/corsMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,12 +34,18 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration
+// CORS configuration - Allow all origins for development
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With']
+  origin: '*', // Allow all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With', 'Origin'],
+  exposedHeaders: ['Content-Length', 'Content-Type', 'X-Powered-By'],
+  credentials: true, // Allow credentials
+  maxAge: 86400 // Cache preflight requests for 24 hours
 }));
+
+// Use our custom CORS middleware as a backup
+app.use(corsMiddleware);
 
 // Compression
 app.use(compression());
@@ -176,7 +185,10 @@ app.get('/fhir/metadata', (req, res) => {
 
 // API Routes
 app.use('/fhir/CodeSystem', codeSystemRoutes);
+app.use('/fhir/CodeSystem', namasteRoutes); // Add specific namaste and icd11 routes
+app.use('/fhir/ValueSet', namasteRoutes); // Add ValueSet expand operations
 app.use('/fhir/ConceptMap', conceptMapRoutes);
+app.use('/fhir/ConceptMap', translationRoutes); // Add translation routes for API playground
 app.use('/fhir/ValueSet', valueSetRoutes);
 app.use('/fhir/Condition', conditionRoutes);
 app.use('/fhir/Patient', patientRoutes);
