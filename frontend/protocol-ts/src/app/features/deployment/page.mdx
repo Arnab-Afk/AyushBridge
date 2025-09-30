@@ -1,0 +1,342 @@
+import { Button } from '@/components/Button'
+
+export const metadata = {
+  title: 'Deployment - AyushBridge',
+  description: 'Learn about deployment options and configurations for AyushBridge including cloud platforms, containerization, and scaling strategies.',
+}
+
+export const sections = [
+  { title: 'Overview', id: 'overview' },
+  { title: 'Deployment Options', id: 'deployment-options' },
+  { title: 'Containerization', id: 'containerization' },
+  { title: 'Cloud Platforms', id: 'cloud-platforms' },
+  { title: 'Configuration', id: 'configuration' },
+  { title: 'Scaling', id: 'scaling' },
+]
+
+# Deployment
+
+## Overview {{ anchor: false, id: 'overview' }}
+
+AyushBridge supports multiple deployment strategies to meet different organizational needs, from simple single-server installations to complex multi-region cloud deployments. The system is designed for high availability, scalability, and compliance with healthcare regulations. {{ className: 'lead' }}
+
+## Deployment Options {{ anchor: false, id: 'deployment-options' }}
+
+### On-Premises Deployment
+Traditional server-based installation for organizations requiring full control over infrastructure.
+
+**Requirements:**
+- Ubuntu 20.04+ or RHEL 8+
+- PostgreSQL 13+
+- Node.js 18+
+- Minimum 4GB RAM, 2 CPU cores
+- 50GB storage
+
+**Installation Steps:**
+```bash
+# 1. Install dependencies
+sudo apt update
+sudo apt install postgresql nodejs npm
+
+# 2. Clone repository
+git clone https://github.com/Arnab-Afk/AyushBridge.git
+cd AyushBridge/backend
+
+# 3. Configure environment
+cp .env.example .env
+# Edit .env with your settings
+
+# 4. Setup database
+npm run setup:database
+
+# 5. Start services
+npm run start:production
+```
+
+### Docker Deployment
+Containerized deployment for consistent environments across development and production.
+
+**Docker Compose Configuration:**
+```yaml
+version: '3.8'
+services:
+  ayushbridge:
+    image: ayushbridge/terminology-service:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://user:password@db:5432/ayushbridge
+    depends_on:
+      - db
+    volumes:
+      - ./config:/app/config
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=ayushbridge
+      - POSTGRES_USER=ayushbridge
+      - POSTGRES_PASSWORD=secure_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+### Kubernetes Deployment
+Orchestrated deployment for high availability and auto-scaling in production environments.
+
+**Key Components:**
+- **API Server**: Main application service
+- **Worker Nodes**: Background processing
+- **PostgreSQL Cluster**: Database with replication
+- **Redis Cache**: Session and terminology caching
+- **Ingress Controller**: Load balancing and SSL termination
+
+## Containerization {{ anchor: false, id: 'containerization' }}
+
+### Dockerfile
+```dockerfile
+FROM node:18-alpine
+
+# Install system dependencies
+RUN apk add --no-cache postgresql-client
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy application code
+COPY . .
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S ayushbridge -u 1001
+
+# Change ownership
+RUN chown -R ayushbridge:nodejs /app
+USER ayushbridge
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node healthcheck.js
+
+# Start application
+CMD ["npm", "start"]
+```
+
+### Multi-stage Build
+```dockerfile
+# Build stage
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine AS production
+
+WORKDIR /app
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+
+USER ayushbridge
+EXPOSE 3000
+
+CMD ["npm", "run", "start:prod"]
+```
+
+## Cloud Platforms {{ anchor: false, id: 'cloud-platforms' }}
+
+### Azure Deployment
+Native integration with Azure services for healthcare organizations.
+
+**Azure Services Used:**
+- **Azure Container Apps**: Serverless container hosting
+- **Azure Database for PostgreSQL**: Managed database
+- **Azure Cache for Redis**: High-performance caching
+- **Azure Key Vault**: Secret management
+- **Azure Monitor**: Application insights
+
+**Deployment Script:**
+```bash
+# Login to Azure
+az login
+
+# Create resource group
+az group create --name ayushbridge-rg --location eastus
+
+# Deploy using Bicep template
+az deployment group create \
+  --resource-group ayushbridge-rg \
+  --template-file infrastructure/main.bicep \
+  --parameters environment=prod
+```
+
+### AWS Deployment
+Amazon Web Services deployment with healthcare compliance features.
+
+**AWS Services:**
+- **ECS Fargate**: Container orchestration
+- **RDS PostgreSQL**: Managed database
+- **ElastiCache Redis**: In-memory caching
+- **CloudWatch**: Monitoring and logging
+- **Secrets Manager**: Secure credential storage
+
+### Google Cloud Platform
+GCP deployment leveraging healthcare-specific services.
+
+**GCP Services:**
+- **Cloud Run**: Serverless containers
+- **Cloud SQL PostgreSQL**: Managed database
+- **Memorystore Redis**: Managed caching
+- **Secret Manager**: Secret management
+- **Cloud Monitoring**: Observability
+
+## Configuration {{ anchor: false, id: 'configuration' }}
+
+### Environment Variables
+```bash
+# Database Configuration
+DATABASE_URL=postgresql://user:password@host:5432/database
+DB_SSL=true
+DB_MAX_CONNECTIONS=20
+
+# Authentication
+JWT_SECRET=your-secret-key
+ABHA_CLIENT_ID=your-client-id
+ABHA_CLIENT_SECRET=your-client-secret
+
+# Terminology Services
+ICD11_API_KEY=your-api-key
+WHO_UPDATE_INTERVAL=24h
+
+# Monitoring
+LOG_LEVEL=info
+METRICS_ENABLED=true
+HEALTH_CHECK_INTERVAL=30s
+```
+
+### Configuration Files
+```json
+{
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0",
+    "cors": {
+      "origin": ["https://yourdomain.com"],
+      "credentials": true
+    }
+  },
+  "terminology": {
+    "cache": {
+      "ttl": "1h",
+      "maxSize": "100MB"
+    },
+    "sync": {
+      "enabled": true,
+      "schedule": "0 2 * * *"
+    }
+  },
+  "security": {
+    "rateLimit": {
+      "windowMs": 900000,
+      "max": 100
+    },
+    "helmet": {
+      "contentSecurityPolicy": true
+    }
+  }
+}
+```
+
+## Scaling {{ anchor: false, id: 'scaling' }}
+
+### Horizontal Scaling
+Distribute load across multiple instances for increased capacity.
+
+**Load Balancing:**
+- **Round Robin**: Simple distribution
+- **Least Connections**: Optimal resource utilization
+- **IP Hash**: Session persistence
+- **Geographic**: Regional distribution
+
+### Vertical Scaling
+Increase resources for individual instances.
+
+**Resource Optimization:**
+- **CPU**: Multi-core processing for concurrent requests
+- **Memory**: Increased RAM for larger terminology caches
+- **Storage**: SSD storage for faster database access
+- **Network**: High-bandwidth connections for API traffic
+
+### Auto-scaling
+Automatic scaling based on demand patterns.
+
+**Scaling Triggers:**
+- **CPU Utilization**: Scale when >70% for 5 minutes
+- **Memory Usage**: Scale when >80% for 3 minutes
+- **Request Queue**: Scale when queue depth >10
+- **Custom Metrics**: Terminology lookup latency
+
+**Scaling Policies:**
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ayushbridge-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ayushbridge-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+```
+
+### Database Scaling
+Ensure database can handle increased load.
+
+**Read Replicas:**
+- Distribute read queries across multiple instances
+- Improve query performance and availability
+- Automatic failover for high availability
+
+**Connection Pooling:**
+- Efficient database connection management
+- Prevent connection exhaustion
+- Optimize resource utilization
+
+<div className="not-prose">
+  <Button href="/quickstart" variant="text" arrow="right">
+    <>View Quick Start Guide</>
+  </Button>
+</div>

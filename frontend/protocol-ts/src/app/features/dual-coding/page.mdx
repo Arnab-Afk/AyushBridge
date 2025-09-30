@@ -1,0 +1,160 @@
+import { Button } from '@/components/Button'
+
+export const metadata = {
+  title: 'Dual Coding - AyushBridge',
+  description: 'Learn about dual coding capabilities in AyushBridge for simultaneous use of traditional medicine and biomedical terminologies.',
+}
+
+export const sections = [
+  { title: 'Overview', id: 'overview' },
+  { title: 'How Dual Coding Works', id: 'how-it-works' },
+  { title: 'Supported Code Systems', id: 'supported-systems' },
+  { title: 'Implementation Examples', id: 'implementation' },
+  { title: 'Benefits', id: 'benefits' },
+]
+
+# Dual Coding
+
+## Overview {{ anchor: false, id: 'overview' }}
+
+Dual coding is a core feature of AyushBridge that enables healthcare systems to use both traditional medicine terminologies and modern biomedical classifications simultaneously. This approach ensures comprehensive documentation while maintaining interoperability with global health standards. {{ className: 'lead' }}
+
+## How Dual Coding Works {{ anchor: false, id: 'how-it-works' }}
+
+Dual coding allows healthcare providers to capture patient information using traditional medicine concepts while automatically mapping to equivalent biomedical terms. This creates a bridge between cultural healing practices and evidence-based medicine.
+
+### The Process
+1. **Primary Coding**: Document using traditional medicine terminology (NAMASTE)
+2. **Automatic Mapping**: System translates to biomedical equivalents (ICD-11)
+3. **Unified Storage**: Both codes stored with confidence scores
+4. **Flexible Retrieval**: Access information in either coding system
+
+### Mapping Quality
+Each dual-coded entry includes:
+- **Confidence Score**: Indicates mapping reliability (0.0 to 1.0)
+- **Mapping Type**: Direct, related, or approximate
+- **Source References**: Links to terminology authorities
+
+## Supported Code Systems {{ anchor: false, id: 'supported-systems' }}
+
+### Traditional Medicine Systems
+- **NAMASTE**: National AYUSH Morbidity & Standardized Terminologies Electronic
+  - Covers Ayurveda, Siddha, Unani, Yoga, Naturopathy, and Homeopathy
+  - 4,500+ standardized terms for disorders and conditions
+
+- **WHO ICD-11 TM2**: Traditional Medicine Module 2
+  - 529 disorder categories specific to traditional medicine
+  - Integrated with global ICD-11 classification
+
+### Biomedical Systems
+- **ICD-11 MMS**: Mortality and Morbidity Statistics
+  - Foundation component of ICD-11
+  - Used for statistical reporting and epidemiology
+
+- **SNOMED CT**: Systematized Nomenclature of Medicine Clinical Terms
+  - Comprehensive clinical terminology
+  - Supports detailed clinical documentation
+
+## Implementation Examples {{ anchor: false, id: 'implementation' }}
+
+### API Usage
+
+#### Creating Dual-Coded Conditions
+```json
+{
+  "resourceType": "Condition",
+  "subject": {
+    "reference": "Patient/example"
+  },
+  "code": {
+    "coding": [
+      {
+        "system": "https://namaste.in/codesystem",
+        "code": "AYU001",
+        "display": "Vata imbalance"
+      },
+      {
+        "system": "http://id.who.int/icd11/mms",
+        "code": "ME84",
+        "display": "Disorders of the nervous system"
+      }
+    ]
+  },
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+          "code": "problem-list-item"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Batch Dual Coding
+```json
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "ConceptMap",
+        "url": "https://ayushbridge.in/ConceptMap/namaste-to-icd11",
+        "sourceUri": "https://namaste.in/codesystem",
+        "targetUri": "http://id.who.int/icd11/mms",
+        "group": [
+          {
+            "source": "https://namaste.in/codesystem",
+            "target": "http://id.who.int/icd11/mms",
+            "element": [
+              {
+                "code": "AYU001",
+                "display": "Vata imbalance",
+                "target": [
+                  {
+                    "code": "ME84",
+                    "display": "Disorders of the nervous system",
+                    "equivalence": "relatedto"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+### Clinical Workflow
+1. **Diagnosis Entry**: Clinician enters diagnosis in traditional terms
+2. **Automatic Translation**: System suggests biomedical equivalents
+3. **Validation**: Clinician reviews and confirms mappings
+4. **Storage**: Both coding systems preserved in patient record
+
+## Benefits {{ anchor: false, id: 'benefits' }}
+
+### For Healthcare Providers
+- **Cultural Competence**: Respect traditional healing paradigms
+- **Comprehensive Care**: Access to both traditional and modern treatments
+- **Regulatory Compliance**: Meet both local and international standards
+
+### For Healthcare Systems
+- **Interoperability**: Seamless data exchange across systems
+- **Analytics**: Rich data for research and quality improvement
+- **Insurance**: Support claims processing in multiple coding systems
+
+### For Patients
+- **Holistic Care**: Integration of traditional and modern medicine
+- **Continuity**: Consistent care across different providers
+- **Privacy**: Culturally appropriate health information management
+
+<div className="not-prose">
+  <Button href="/api-reference#code-translation" variant="text" arrow="right">
+    <>View Translation APIs</>
+  </Button>
+</div>

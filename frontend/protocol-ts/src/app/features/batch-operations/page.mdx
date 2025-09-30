@@ -1,0 +1,242 @@
+import { Button } from '@/components/Button'
+
+export const metadata = {
+  title: 'Batch Operations - AyushBridge',
+  description: 'Learn about batch processing capabilities in AyushBridge for efficient bulk operations on healthcare data.',
+}
+
+export const sections = [
+  { title: 'Overview', id: 'overview' },
+  { title: 'Supported Operations', id: 'supported-operations' },
+  { title: 'Batch Bundles', id: 'batch-bundles' },
+  { title: 'Transaction Bundles', id: 'transaction-bundles' },
+  { title: 'Performance Optimization', id: 'performance' },
+  { title: 'Error Handling', id: 'error-handling' },
+]
+
+# Batch Operations
+
+## Overview {{ anchor: false, id: 'overview' }}
+
+Batch operations in AyushBridge enable efficient processing of multiple healthcare data operations in a single request. This feature is essential for migrating existing data, bulk updates, and high-throughput clinical workflows. {{ className: 'lead' }}
+
+## Supported Operations {{ anchor: false, id: 'supported-operations' }}
+
+### Terminology Operations
+- **Bulk Code Validation**: Validate multiple codes against code systems
+- **Batch Translation**: Convert multiple codes between terminology systems
+- **Mass Concept Mapping**: Create mappings for multiple concepts simultaneously
+
+### Clinical Data Operations
+- **Bulk Patient Registration**: Register multiple patients in one operation
+- **Batch Condition Updates**: Update multiple clinical conditions
+- **Mass Observation Recording**: Record multiple clinical observations
+
+### Administrative Operations
+- **Bulk User Management**: Create/update multiple user accounts
+- **Batch Audit Retrieval**: Fetch multiple audit events
+- **Mass Data Export**: Export large datasets efficiently
+
+## Batch Bundles {{ anchor: false, id: 'batch-bundles' }}
+
+Batch bundles allow independent operations to be processed together, with individual success/failure status for each entry.
+
+### Structure
+```json
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "CodeSystem/$validate-code"
+      },
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "code",
+            "valueString": "AYU001"
+          },
+          {
+            "name": "system",
+            "valueUri": "https://namaste.in/codesystem"
+          }
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "ConceptMap/$translate?code=AYU001&system=https://namaste.in/codesystem&target=http://id.who.int/icd11/mms"
+      }
+    }
+  ]
+}
+```
+
+### Response Format
+```json
+{
+  "resourceType": "Bundle",
+  "type": "batch-response",
+  "entry": [
+    {
+      "response": {
+        "status": "200 OK",
+        "outcome": {
+          "resourceType": "OperationOutcome",
+          "issue": [
+            {
+              "severity": "information",
+              "code": "informational",
+              "details": {
+                "text": "Code is valid"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "response": {
+        "status": "200 OK",
+        "outcome": {
+          "resourceType": "Parameters",
+          "parameter": [
+            {
+              "name": "result",
+              "valueBoolean": true
+            },
+            {
+              "name": "match",
+              "part": [
+                {
+                  "name": "equivalence",
+                  "valueCode": "relatedto"
+                },
+                {
+                  "name": "concept",
+                  "valueCoding": {
+                    "system": "http://id.who.int/icd11/mms",
+                    "code": "ME84",
+                    "display": "Disorders of the nervous system"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+
+## Transaction Bundles {{ anchor: false, id: 'transaction-bundles' }}
+
+Transaction bundles ensure atomic processing - either all operations succeed or all are rolled back.
+
+### Use Cases
+- **Data Migration**: Bulk import of existing patient data
+- **Clinical Updates**: Coordinated updates across multiple resources
+- **System Synchronization**: Synchronized terminology updates
+
+### Example: Patient Data Import
+```json
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:patient-1",
+      "resource": {
+        "resourceType": "Patient",
+        "identifier": [
+          {
+            "system": "https://abha.in",
+            "value": "12-3456-7890-1234"
+          }
+        ],
+        "name": [
+          {
+            "family": "Sharma",
+            "given": ["Rahul"]
+          }
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:condition-1",
+      "resource": {
+        "resourceType": "Condition",
+        "subject": {
+          "reference": "urn:uuid:patient-1"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "https://namaste.in/codesystem",
+              "code": "AYU001",
+              "display": "Vata imbalance"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    }
+  ]
+}
+```
+
+## Performance Optimization {{ anchor: false, id: 'performance' }}
+
+### Batch Size Limits
+- **Maximum Entries**: 1000 operations per batch
+- **Recommended Size**: 100-500 operations for optimal performance
+- **Timeout**: 300 seconds for batch completion
+
+### Optimization Strategies
+- **Parallel Processing**: Independent operations processed concurrently
+- **Caching**: Frequently accessed terminology data cached
+- **Indexing**: Optimized database indexes for bulk queries
+- **Compression**: Request/response compression for large payloads
+
+### Monitoring Metrics
+- **Processing Time**: Total time for batch completion
+- **Success Rate**: Percentage of successful operations
+- **Throughput**: Operations processed per second
+- **Error Distribution**: Breakdown of error types
+
+## Error Handling {{ anchor: false, id: 'error-handling' }}
+
+### Batch Error Responses
+Individual operation failures don't affect other operations in batch mode.
+
+### Transaction Rollback
+In transaction mode, any failure causes complete rollback of all operations.
+
+### Error Types
+- **Validation Errors**: Invalid data format or content
+- **Authorization Errors**: Insufficient permissions
+- **System Errors**: Server-side processing failures
+- **Timeout Errors**: Operations exceeding time limits
+
+### Retry Strategies
+- **Exponential Backoff**: Progressive delay between retry attempts
+- **Partial Success**: Process successful operations, retry failed ones
+- **Circuit Breaker**: Temporarily halt processing on repeated failures
+
+<div className="not-prose">
+  <Button href="/api-reference#batch-operations" variant="text" arrow="right">
+    <>View Batch APIs</>
+  </Button>
+</div>

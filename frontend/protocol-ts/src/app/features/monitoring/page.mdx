@@ -1,0 +1,253 @@
+import { Button } from '@/components/Button'
+
+export const metadata = {
+  title: 'Monitoring - AyushBridge',
+  description: 'Learn about monitoring capabilities in AyushBridge including health checks, metrics, and system observability.',
+}
+
+export const sections = [
+  { title: 'Overview', id: 'overview' },
+  { title: 'Health Checks', id: 'health-checks' },
+  { title: 'Metrics & Analytics', id: 'metrics' },
+  { title: 'Audit Trails', id: 'audit-trails' },
+  { title: 'Performance Monitoring', id: 'performance' },
+  { title: 'Alerting', id: 'alerting' },
+]
+
+# Monitoring
+
+## Overview {{ anchor: false, id: 'overview' }}
+
+AyushBridge provides comprehensive monitoring capabilities to ensure system reliability, performance, and compliance. The monitoring system tracks health status, usage metrics, security events, and performance indicators in real-time. {{ className: 'lead' }}
+
+## Health Checks {{ anchor: false, id: 'health-checks' }}
+
+Health checks provide immediate status information about system components and external dependencies.
+
+### Endpoint
+```
+GET /health
+```
+
+### Response
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-09-30T10:30:00Z",
+  "version": "1.0.0",
+  "services": {
+    "database": {
+      "status": "healthy",
+      "responseTime": "45ms"
+    },
+    "terminology-service": {
+      "status": "healthy",
+      "responseTime": "120ms"
+    },
+    "authentication": {
+      "status": "healthy",
+      "responseTime": "30ms"
+    }
+  }
+}
+```
+
+### Health Check Types
+- **Readiness**: System ready to accept traffic
+- **Liveness**: System functioning correctly
+- **Dependency**: External service availability
+- **Custom**: Application-specific health indicators
+
+## Metrics & Analytics {{ anchor: false, id: 'metrics' }}
+
+Comprehensive metrics collection for operational insights and performance optimization.
+
+### API Metrics
+- **Request Count**: Total API calls by endpoint
+- **Response Times**: Average, 95th, 99th percentile latency
+- **Error Rates**: HTTP status code distribution
+- **Throughput**: Requests per second
+
+### Terminology Metrics
+- **Code Validation Success Rate**: Percentage of successful validations
+- **Translation Accuracy**: Mapping confidence scores
+- **Cache Hit Rate**: Terminology lookup efficiency
+- **Update Frequency**: Code system synchronization status
+
+### Usage Analytics
+```json
+{
+  "period": "2025-09-30",
+  "api_calls": {
+    "total": 15420,
+    "by_endpoint": {
+      "/CodeSystem/$validate-code": 4520,
+      "/ConceptMap/$translate": 3890,
+      "/Patient": 2340
+    }
+  },
+  "terminology_usage": {
+    "namaste_codes_validated": 4520,
+    "icd11_translations": 3890,
+    "cache_hit_rate": 0.87
+  },
+  "performance": {
+    "avg_response_time": "145ms",
+    "p95_response_time": "320ms",
+    "error_rate": "0.02"
+  }
+}
+```
+
+## Audit Trails {{ anchor: false, id: 'audit-trails' }}
+
+Complete audit logging for compliance, security, and troubleshooting.
+
+### AuditEvent Resource
+```json
+{
+  "resourceType": "AuditEvent",
+  "type": {
+    "system": "http://terminology.hl7.org/CodeSystem/audit-event-type",
+    "code": "rest",
+    "display": "Restful Operation"
+  },
+  "subtype": [
+    {
+      "system": "http://hl7.org/fhir/restful-interaction",
+      "code": "create",
+      "display": "create"
+    }
+  ],
+  "action": "C",
+  "recorded": "2025-09-30T10:30:00Z",
+  "outcome": "0",
+  "agent": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/extra-security-role-type",
+            "code": "humanuser",
+            "display": "human user"
+          }
+        ]
+      },
+      "who": {
+        "identifier": {
+          "system": "https://abha.in",
+          "value": "12-3456-7890-1234"
+        }
+      },
+      "requestor": true
+    }
+  ],
+  "source": {
+    "site": "AyushBridge Server",
+    "observer": {
+      "identifier": {
+        "system": "https://ayushbridge.in",
+        "value": "server-01"
+      }
+    }
+  },
+  "entity": [
+    {
+      "what": {
+        "reference": "Patient/example"
+      },
+      "type": {
+        "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+        "code": "1",
+        "display": "Person"
+      },
+      "role": {
+        "system": "http://terminology.hl7.org/CodeSystem/object-role",
+        "code": "1",
+        "display": "Patient"
+      }
+    }
+  ]
+}
+```
+
+### Audit Categories
+- **Authentication Events**: Login, logout, token refresh
+- **Authorization Events**: Access control decisions
+- **Data Access**: Read, create, update, delete operations
+- **Terminology Operations**: Code validation, translation requests
+- **Administrative Actions**: Configuration changes, user management
+
+## Performance Monitoring {{ anchor: false, id: 'performance' }}
+
+Real-time performance tracking and optimization insights.
+
+### Key Performance Indicators
+- **API Response Time**: End-to-end request processing
+- **Database Query Performance**: SQL execution times
+- **Memory Usage**: Heap and non-heap utilization
+- **CPU Utilization**: Core and thread-level metrics
+- **Network I/O**: Bandwidth and connection metrics
+
+### Performance Dashboards
+- **Real-time Metrics**: Current system status
+- **Historical Trends**: Performance over time
+- **Comparative Analysis**: Performance across deployments
+- **Anomaly Detection**: Automated performance issue identification
+
+### Optimization Recommendations
+- **Query Optimization**: Index recommendations
+- **Caching Strategies**: Cache hit rate improvements
+- **Resource Scaling**: Auto-scaling triggers
+- **Code Profiling**: Performance bottleneck identification
+
+## Alerting {{ anchor: false, id: 'alerting' }}
+
+Automated alerting for critical system events and performance issues.
+
+### Alert Types
+- **System Health**: Service availability issues
+- **Performance**: Response time degradation
+- **Security**: Authentication failures, suspicious activity
+- **Capacity**: Resource utilization thresholds
+- **Data Quality**: Terminology synchronization failures
+
+### Alert Channels
+- **Email Notifications**: Critical alerts to administrators
+- **SMS Alerts**: High-priority system issues
+- **Webhook Integration**: Custom alerting systems
+- **Dashboard Alerts**: Real-time UI notifications
+
+### Alert Configuration
+```json
+{
+  "alerts": [
+    {
+      "name": "High Error Rate",
+      "condition": "error_rate > 0.05",
+      "severity": "critical",
+      "channels": ["email", "sms"],
+      "cooldown": "300s"
+    },
+    {
+      "name": "Slow Response Time",
+      "condition": "p95_response_time > 5000ms",
+      "severity": "warning",
+      "channels": ["webhook"],
+      "cooldown": "600s"
+    }
+  ]
+}
+```
+
+### Escalation Policies
+- **Immediate Response**: Critical system failures
+- **Scheduled Review**: Performance degradation
+- **Weekly Reports**: General health summaries
+- **Monthly Audits**: Compliance and security reviews
+
+<div className="not-prose">
+  <Button href="/api-reference#monitoring" variant="text" arrow="right">
+    <>View Monitoring APIs</>
+  </Button>
+</div>
